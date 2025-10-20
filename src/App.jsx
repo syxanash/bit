@@ -46,6 +46,10 @@ function App() {
     const payload = JSON.parse(response.message.content);
 
     setBitValue(payload.bit === 'YES' ? true : false);
+
+    setTimeout(() => {
+      setBitValue(undefined);
+    }, 800);
   }, [inputQuestion])
 
   const renderBit = useCallback(() => {
