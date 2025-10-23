@@ -35,7 +35,7 @@ function App() {
 
   const askQuestion = useCallback(async () => {
     const response = await ollama.chat({
-      model: 'gemma3:1b',
+      model: 'gemma3:270m',
       messages: [{ role: 'user', content: SystemPrompt.prompt }, { role: 'user', content: inputQuestion }],
       think: false,
       stream: false,
@@ -54,18 +54,20 @@ function App() {
 
   const renderBit = useCallback(() => {
     if (bitValue === undefined) {
-      return <img src={`/assets/bit_idle_${bitIdleStatus ? '1' : '2'}.gif`} alt='bit' />
+      return <img src={`/assets/bit_idle_${bitIdleStatus ? '1' : '2'}-crop.gif`} alt='bit' />
     }
 
     if (bitValue) {
-      return <img src={`/assets/bit_yes.gif`} alt='Bit YES' />
+      return <img src={`/assets/bit_yes-crop.gif`} alt='Bit YES' />
     } else {
-      return <img src={`/assets/bit_no.gif`} alt='Bit NO' />
+      return <img src={`/assets/bit_no-crop.gif`} alt='Bit NO' />
     }
   }, [bitIdleStatus, bitValue]);
 
   return <React.Fragment>
-    {renderBit()}
+    <div style={{width: '500px', height: '500px'}}>
+      {renderBit()}
+    </div>
     <input onChange={(e) => setInputQuestion(e.target.value)}></input>
     <button onClick={askQuestion}>Ask</button>
   </React.Fragment>
