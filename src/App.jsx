@@ -54,18 +54,18 @@ function App() {
 
   const renderBit = useCallback(() => {
     if (bitValue === undefined) {
-      return <img src={`/assets/bit_idle_${bitIdleStatus ? '1' : '2'}-crop.gif`} alt='bit' />
+      return <img src={`/assets/bit_idle_${bitIdleStatus ? '1' : '2'}.gif`} width='60%' alt='bit' />
     }
 
     if (bitValue) {
-      return <img src={`/assets/bit_yes-crop.gif`} alt='Bit YES' />
+      return <img src={`/assets/bit_yes.gif`} width='60%' alt='Bit YES' />
     } else {
-      return <img src={`/assets/bit_no-crop.gif`} alt='Bit NO' />
+      return <img src={`/assets/bit_no.gif`} width='60%' alt='Bit NO' />
     }
   }, [bitIdleStatus, bitValue]);
 
   return <React.Fragment>
-    <div style={{width: '500px', height: '500px'}}>
+    <div>
       {renderBit()}
     </div>
     <input onChange={(e) => setInputQuestion(e.target.value)}></input>
