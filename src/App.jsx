@@ -10,15 +10,6 @@ import bitIdle2 from './assets/bit_idle_2.gif';
 import bitYes from './assets/bit_yes.gif';
 import bitNo from './assets/bit_no.gif';
 
-const WLLAMA_CONFIG_PATHS = {
-  'single-thread/wllama.wasm': wllamaSingle,
-  'multi-thread/wllama.wasm': wllamaMulti,
-};
-
-const wllamaInstance = new Wllama(WLLAMA_CONFIG_PATHS);
-
-await wllamaInstance.loadModelFromUrl('https://huggingface.co/LiquidAI/LFM2-350M-GGUF/resolve/main/LFM2-350M-Q4_K_M.gguf')
-
 function useInterval(callback, delay) {
   const savedCallback = useRef();
 
@@ -38,13 +29,28 @@ function useInterval(callback, delay) {
 }
 
 function App() {
+  const [bitIdleStatus, setBitIdleStatus] = useState(true);
+  const [modelLoaded, setModelLoaded] = useState(false);
+  const [inputQuestion, setInputQuestion] = useState(undefined);
+  const [bitValue, setBitValue] = useState(undefined);
+
+  const wllamaInstance = useRef(undefined);
+
+  const loadModel = useCallback(async () => {
+    const WLLAMA_CONFIG_PATHS = {
+      'single-thread/wllama.wasm': wllamaSingle,
+      'multi-thread/wllama.wasm': wllamaMulti,
+    };
+
+    wllamaInstance.current = new Wllama(WLLAMA_CONFIG_PATHS);
+    await wllamaInstance.current.loadModelFromUrl('https://huggingface.co/LiquidAI/LFM2-350M-GGUF/resolve/main/LFM2-350M-Q4_K_M.gguf')
+
+    setModelLoaded(true);
+  }, []);
+
   useInterval(() => {
     setBitIdleStatus(!bitIdleStatus);
   }, 500);
-
-  const [bitIdleStatus, setBitIdleStatus] = useState(true);
-  const [inputQuestion, setInputQuestion] = useState(undefined);
-  const [bitValue, setBitValue] = useState(undefined);
 
   const askQuestion = useCallback(async () => {
     console.log(inputQuestion)
@@ -61,7 +67,7 @@ function App() {
     const options = {
     }
 
-    const response = await wllamaInstance.createChatCompletion(messages, options);
+    const response = await wllamaInstance.current.createChatCompletion(messages, options);
 
     console.log(response);
 
@@ -85,12 +91,18 @@ function App() {
     }
   }, [bitIdleStatus, bitValue]);
 
+  if (modelLoaded) {
+    return <React.Fragment>
+      <div>
+        {renderBit()}
+      </div>
+      <input onChange={(e) => setInputQuestion(e.target.value)}></input>
+      <button onClick={askQuestion}>Ask</button>
+    </React.Fragment>
+  }
+
   return <React.Fragment>
-    <div>
-      {renderBit()}
-    </div>
-    <input onChange={(e) => setInputQuestion(e.target.value)}></input>
-    <button onClick={askQuestion}>Ask</button>
+    <button onClick={loadModel}>WAKE UP</button>
   </React.Fragment>
 }
 
