@@ -36,6 +36,13 @@ function App() {
 
   const wllamaInstance = useRef(undefined);
 
+  const progressCallback = useCallback(({ loaded, total }) => {
+    // Calculate the progress as a percentage
+    const progressPercentage = Math.round((loaded / total) * 100);
+    // Log the progress in a user-friendly format
+    console.log(`Downloading... ${progressPercentage}%`);
+  }, []);
+
   const loadModel = useCallback(async () => {
     const WLLAMA_CONFIG_PATHS = {
       'single-thread/wllama.wasm': wllamaSingle,
@@ -43,10 +50,13 @@ function App() {
     };
 
     wllamaInstance.current = new Wllama(WLLAMA_CONFIG_PATHS);
-    await wllamaInstance.current.loadModelFromUrl('https://huggingface.co/LiquidAI/LFM2-350M-GGUF/resolve/main/LFM2-350M-Q4_K_M.gguf')
+    await wllamaInstance.current.loadModelFromUrl(
+      'https://huggingface.co/LiquidAI/LFM2-350M-GGUF/resolve/main/LFM2-350M-Q4_K_M.gguf',
+      { progressCallback }
+    )
 
     setModelLoaded(true);
-  }, []);
+  }, [progressCallback]);
 
   useInterval(() => {
     setBitIdleStatus(!bitIdleStatus);
