@@ -5,6 +5,11 @@ import wllamaSingle from '@wllama/wllama/src/single-thread/wllama.wasm?url';
 import wllamaMulti from '@wllama/wllama/src/multi-thread/wllama.wasm?url';
 import SystemPrompt from './systemPrompt';
 
+import bitIdle1 from './assets/bit_idle_1.gif';
+import bitIdle2 from './assets/bit_idle_2.gif';
+import bitYes from './assets/bit_yes.gif';
+import bitNo from './assets/bit_no.gif';
+
 const WLLAMA_CONFIG_PATHS = {
   'single-thread/wllama.wasm': wllamaSingle,
   'multi-thread/wllama.wasm': wllamaMulti,
@@ -69,13 +74,14 @@ function App() {
 
   const renderBit = useCallback(() => {
     if (bitValue === undefined) {
-      return <img src={`/assets/bit_idle_${bitIdleStatus ? '1' : '2'}.gif`} width='60%' alt='bit' />
+      const src = bitIdleStatus ? bitIdle1 : bitIdle2;
+      return <img src={src} width='60%' alt='bit' />
     }
 
     if (bitValue) {
-      return <img src={`/assets/bit_yes.gif`} width='60%' alt='Bit YES' />
+      return <img src={bitYes} width='60%' alt='Bit YES' />
     } else {
-      return <img src={`/assets/bit_no.gif`} width='60%' alt='Bit NO' />
+      return <img src={bitNo} width='60%' alt='Bit NO' />
     }
   }, [bitIdleStatus, bitValue]);
 
