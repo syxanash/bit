@@ -7,9 +7,11 @@
     "dev": "vite --host",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "vite build && surge --domain pGGp8Md7vg.surge.sh dist/"
   },
   "dependencies": {
+    "@wllama/wllama": "^2.3.6",
     "ollama": "^0.6.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
