@@ -33,12 +33,20 @@ function App() {
   const [inputQuestion, setInputQuestion] = useState(undefined);
   const [bitValue, setBitValue] = useState(undefined);
 
+  const [messages, setMessages] = useState([
+    { role: 'system', content: 'you are a binary answer bot. You can only respond with single word "YES" or "NO". do not provide explanation, punctuation or other text.' },
+    { role: 'user', content: 'is the water wet?' },
+    { role: 'assistant', content: 'YES' },
+    { role: 'user', content: 'is planet earth flat?' },
+    { role: 'assistant', content: 'NO' },
+  ]);
+
   const wllamaInstance = useRef(undefined);
 
   const progressCallback = useCallback(({ loaded, total }) => {
-    // Calculate the progress as a percentage
+
     const progressPercentage = Math.round((loaded / total) * 100);
-    // Log the progress in a user-friendly format
+
     console.log(`Downloading... ${progressPercentage}%`);
   }, []);
 
@@ -67,16 +75,13 @@ function App() {
   }, 500);
 
   const askQuestion = useCallback(async () => {
-    console.log(inputQuestion)
+    if (!inputQuestion || !inputQuestion.trim()) return;
 
-    const messages = [
-      { role: 'system', content: 'you are a binary answer bot. You can only respond with single word "YES" or "NO". do not provide explanation, punctuation or other text.' },
-      { role: 'user', content: 'is the water wet?' },
-      { role: 'assistant', content: 'YES' },
-      { role: 'user', content: 'is planet earth flat?' },
-      { role: 'assistant', content: 'NO' },
-      { role: 'user', content: inputQuestion }
-    ]
+    console.log('askQuestion:', inputQuestion)
+
+    const userMsg = { role: 'user', content: inputQuestion };
+    const messagesForRequest = [...messages, userMsg];
+    setMessages(messagesForRequest);
 
     const config = {
       seed: 42,
@@ -94,18 +99,23 @@ function App() {
       stream: false,
     }
 
-    const response = await wllamaInstance.current.createChatCompletion(messages, options);
+    const response = await wllamaInstance.current.createChatCompletion(messagesForRequest, options);
 
-    console.log(response);
+    console.log('assistant response raw:', response);
 
-    const normalized = (response || '').trim().toUpperCase();
+    const assistantContent = (response || '').trim();
+
+    const assistantMsg = { role: 'assistant', content: assistantContent };
+    setMessages((prev) => [...prev, assistantMsg]);
+
+    const normalized = assistantContent.toUpperCase();
     const firstWord = normalized.split(/\s+/)[0];
     setBitValue(firstWord === 'YES');
 
     setTimeout(() => {
       setBitValue(undefined);
     }, 800);
-  }, [inputQuestion])
+  }, [inputQuestion, messages])
 
   const renderBit = useCallback(() => {
     if (bitValue === undefined) {
