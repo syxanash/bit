@@ -73,7 +73,8 @@ function App() {
   }, [progressCallback]);
 
   useInterval(() => {
-    setBitIdleStatus(!bitIdleStatus);
+    if (modelLoaded)
+      setBitIdleStatus(!bitIdleStatus);
   }, 500);
 
   const askQuestion = useCallback(async () => {
