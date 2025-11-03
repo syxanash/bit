@@ -30,6 +30,7 @@ function useInterval(callback, delay) {
 function App() {
   const [bitIdleStatus, setBitIdleStatus] = useState(true);
   const [modelLoaded, setModelLoaded] = useState(false);
+  const [inputSubmitted, setInputSubmitted] = useState(false);
   const [inputQuestion, setInputQuestion] = useState(undefined);
   const [bitValue, setBitValue] = useState(undefined);
   const [percentageLoad, setPercentageLoad] = useState(undefined);
@@ -62,8 +63,8 @@ function App() {
       'https://huggingface.co/LiquidAI/LFM2-350M-GGUF/resolve/main/LFM2-350M-Q4_K_M.gguf',
       {
         progressCallback,
-        n_ctx: 1024,
-        n_batch: 128,
+        n_ctx: 4096,
+        n_batch: 512,
         n_threads: Math.max(1, navigator.hardwareConcurrency || 1),
       }
     )
@@ -77,6 +78,8 @@ function App() {
 
   const askQuestion = useCallback(async () => {
     if (!inputQuestion || !inputQuestion.trim()) return;
+
+    setInputSubmitted(true);
 
     console.log('askQuestion:', inputQuestion)
 
@@ -112,6 +115,7 @@ function App() {
     const normalized = assistantContent.toUpperCase();
     const firstWord = normalized.split(/\s+/)[0];
     setBitValue(firstWord === 'YES');
+    setInputSubmitted(false);
 
     setTimeout(() => {
       setBitValue(undefined);
@@ -137,7 +141,7 @@ function App() {
         {renderBit()}
       </div>
       <input onChange={(e) => setInputQuestion(e.target.value)}></input>
-      <button onClick={askQuestion}>Ask</button>
+      <button disabled={inputSubmitted} onClick={askQuestion}>Ask</button>
     </React.Fragment>
   }
 
