@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Wllama } from '@wllama/wllama';
 import wllamaSingle from '@wllama/wllama/src/single-thread/wllama.wasm?url';
 import wllamaMulti from '@wllama/wllama/src/multi-thread/wllama.wasm?url';
-import SystemPrompt from './systemPrompt';
 
 import bitIdle1 from './assets/bit_idle_1.gif';
 import bitIdle2 from './assets/bit_idle_2.gif';
@@ -52,7 +51,15 @@ function App() {
     wllamaInstance.current = new Wllama(WLLAMA_CONFIG_PATHS);
     await wllamaInstance.current.loadModelFromUrl(
       'https://huggingface.co/LiquidAI/LFM2-350M-GGUF/resolve/main/LFM2-350M-Q4_K_M.gguf',
-      { progressCallback }
+      {
+        progressCallback,
+        // Keep context modest for quick inference; increase if needed.
+        n_ctx: 512,
+        // Use available threads for speed (multi-thread build auto-enabled).
+        n_threads: Math.max(1, navigator.hardwareConcurrency || 1),
+        // Reasonable batch for small model; tune if needed.
+        n_batch: 256,
+      }
     )
 
     setModelLoaded(true);
@@ -70,18 +77,27 @@ function App() {
       { role: 'user', content: 'is the water wet?' },
       { role: 'assistant', content: 'YES' },
       { role: 'user', content: 'is planet earth flat?' },
-      { role: 'assitant', content: 'NO' },
+      { role: 'assistant', content: 'NO' },
       { role: 'user', content: inputQuestion }
     ]
 
     const options = {
+      nPredict: 2,
+      sampling: {
+        temp: 0.0,
+        top_k: 1,
+        top_p: 0.0,
+      },
+      useCache: true,
     }
 
     const response = await wllamaInstance.current.createChatCompletion(messages, options);
 
     console.log(response);
 
-    setBitValue(response === 'YES');
+    const normalized = (response || '').trim().toUpperCase();
+    const firstWord = normalized.split(/\s+/)[0];
+    setBitValue(firstWord === 'YES');
 
     setTimeout(() => {
       setBitValue(undefined);
