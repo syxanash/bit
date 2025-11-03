@@ -32,6 +32,7 @@ function App() {
   const [modelLoaded, setModelLoaded] = useState(false);
   const [inputQuestion, setInputQuestion] = useState(undefined);
   const [bitValue, setBitValue] = useState(undefined);
+  const [percentageLoad, setPercentageLoad] = useState(undefined);
 
   const [messages, setMessages] = useState([
     { role: 'system', content: 'you are a binary answer bot. You can only respond with single word "YES" or "NO". do not provide explanation, punctuation or other text.' },
@@ -44,8 +45,8 @@ function App() {
   const wllamaInstance = useRef(undefined);
 
   const progressCallback = useCallback(({ loaded, total }) => {
-
     const progressPercentage = Math.round((loaded / total) * 100);
+    setPercentageLoad(progressPercentage);
 
     console.log(`Downloading... ${progressPercentage}%`);
   }, []);
@@ -142,6 +143,13 @@ function App() {
 
   return <React.Fragment>
     <button onClick={loadModel}>WAKE UP</button>
+    {
+      percentageLoad !== undefined
+        ? <div>
+          <span>Downloading... {percentageLoad}%</span>
+        </div>
+        : null
+    }
   </React.Fragment>
 }
 
