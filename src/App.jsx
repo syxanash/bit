@@ -53,12 +53,9 @@ function App() {
       'https://huggingface.co/LiquidAI/LFM2-350M-GGUF/resolve/main/LFM2-350M-Q4_K_M.gguf',
       {
         progressCallback,
-        // Keep context modest for quick inference; increase if needed.
-        n_ctx: 512,
-        // Use available threads for speed (multi-thread build auto-enabled).
+        n_ctx: 1024,
+        n_batch: 128,
         n_threads: Math.max(1, navigator.hardwareConcurrency || 1),
-        // Reasonable batch for small model; tune if needed.
-        n_batch: 256,
       }
     )
 
@@ -81,14 +78,20 @@ function App() {
       { role: 'user', content: inputQuestion }
     ]
 
+    const config = {
+      seed: 42,
+      temp: 0.0,
+      top_p: 0.95,
+      top_k: 40,
+    };
+
+    await wllamaInstance.current.samplingInit(config);
+
     const options = {
-      nPredict: 2,
-      sampling: {
-        temp: 0.0,
-        top_k: 1,
-        top_p: 0.0,
-      },
+      nPredict: 10,
+      sampling: config,
       useCache: true,
+      stream: false,
     }
 
     const response = await wllamaInstance.current.createChatCompletion(messages, options);
