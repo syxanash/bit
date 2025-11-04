@@ -7,10 +7,10 @@
     "dev": "vite --host",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "deploy": "vite build && surge --domain pGGp8Md7vg.surge.sh dist/"
+    "preview": "vite preview"
   },
   "dependencies": {
+    "@netlify/vite-plugin": "^2.7.9",
     "@wllama/wllama": "^2.3.6",
     "ollama": "^0.6.0",
     "react": "^19.1.1",
