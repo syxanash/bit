@@ -14,7 +14,7 @@ import beepSound from './assets/sounds/beep.mp3';
 function App() {
   const [yesPlay] = useSound(yesSound, { preload: true });
   const [noPlay] = useSound(noSound, { preload: true });
-  const [beepPlay] = useSound(beepSound, { preload: true });
+  const [beepPlay, { stop: beepStop }] = useSound(beepSound, { preload: true, loop: true });
 
   const [modelLoaded, setModelLoaded] = useState(false);
   const [inputSubmitted, setInputSubmitted] = useState(false);
@@ -105,13 +105,15 @@ function App() {
     firstWord === 'YES'
       ? yesPlay()
       : noPlay();
-    
+
     setInputSubmitted(false);
+
+    beepStop();
 
     setTimeout(() => {
       setBitValue(undefined);
     }, 800);
-  }, [beepPlay, inputQuestion, messages, noPlay, yesPlay])
+  }, [beepPlay, inputQuestion, messages, noPlay, beepStop, yesPlay])
 
   const renderBit = useCallback(() => {
     return (
