@@ -1,48 +1,27 @@
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import useSound from 'use-sound';
 import { Wllama } from '@wllama/wllama';
 import wllamaSingle from '@wllama/wllama/src/single-thread/wllama.wasm?url';
 import wllamaMulti from '@wllama/wllama/src/multi-thread/wllama.wasm?url';
 
+import BitAnimation from './components/BitAnimation';
+
 import yesSound from './assets/sounds/yes.mp3';
 import noSound from './assets/sounds/no.mp3';
 import beepSound from './assets/sounds/beep.mp3';
 
-import bitIdle1 from './assets/bit_idle_1.gif';
-import bitIdle2 from './assets/bit_idle_2.gif';
-import bitYes from './assets/bit_yes.gif';
-import bitNo from './assets/bit_no.gif';
-
-function useInterval(callback, delay) {
-  const savedCallback = useRef();
-
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  useEffect(() => {
-    function tick() {
-      savedCallback.current();
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
-}
-
 function App() {
-  const [yesPlay] = useSound(yesSound);
-  const [noPlay] = useSound(noSound);
-  const [beepPlay] = useSound(beepSound);
+  const [yesPlay] = useSound(yesSound, { preload: true });
+  const [noPlay] = useSound(noSound, { preload: true });
+  const [beepPlay] = useSound(beepSound, { preload: true });
 
-  const [bitIdleStatus, setBitIdleStatus] = useState(true);
   const [modelLoaded, setModelLoaded] = useState(false);
   const [inputSubmitted, setInputSubmitted] = useState(false);
   const [inputQuestion, setInputQuestion] = useState(undefined);
   const [bitValue, setBitValue] = useState(undefined);
   const [percentageLoad, setPercentageLoad] = useState(undefined);
+
 
   const [messages, setMessages] = useState([
     { role: 'system', content: 'you are a binary answer bot. You can only respond with single word "YES" or "NO". do not provide explanation, punctuation or other text.' },
@@ -80,11 +59,6 @@ function App() {
 
     setModelLoaded(true);
   }, [progressCallback]);
-
-  useInterval(() => {
-    if (modelLoaded)
-      setBitIdleStatus(!bitIdleStatus);
-  }, 500);
 
   const askQuestion = useCallback(async () => {
     if (!inputQuestion || !inputQuestion.trim()) return;
@@ -140,17 +114,12 @@ function App() {
   }, [beepPlay, inputQuestion, messages, noPlay, yesPlay])
 
   const renderBit = useCallback(() => {
-    if (bitValue === undefined) {
-      const src = bitIdleStatus ? bitIdle1 : bitIdle2;
-      return <img src={src} width='60%' alt='bit' />
-    }
-
-    if (bitValue) {
-      return <img src={bitYes} width='60%' alt='Bit YES' />
-    } else {
-      return <img src={bitNo} width='60%' alt='Bit NO' />
-    }
-  }, [bitIdleStatus, bitValue]);
+    return (
+      <BitAnimation
+        bitValue={bitValue}
+      />
+    );
+  }, [bitValue]);
 
   if (modelLoaded) {
     return <React.Fragment>
