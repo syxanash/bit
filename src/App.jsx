@@ -1,8 +1,13 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import useSound from 'use-sound';
 import { Wllama } from '@wllama/wllama';
 import wllamaSingle from '@wllama/wllama/src/single-thread/wllama.wasm?url';
 import wllamaMulti from '@wllama/wllama/src/multi-thread/wllama.wasm?url';
+
+import yesSound from './assets/sounds/yes.mp3';
+import noSound from './assets/sounds/no.mp3';
+import beepSound from './assets/sounds/beep.mp3';
 
 import bitIdle1 from './assets/bit_idle_1.gif';
 import bitIdle2 from './assets/bit_idle_2.gif';
@@ -28,6 +33,10 @@ function useInterval(callback, delay) {
 }
 
 function App() {
+  const [yesPlay] = useSound(yesSound);
+  const [noPlay] = useSound(noSound);
+  const [beepPlay] = useSound(beepSound);
+
   const [bitIdleStatus, setBitIdleStatus] = useState(true);
   const [modelLoaded, setModelLoaded] = useState(false);
   const [inputSubmitted, setInputSubmitted] = useState(false);
@@ -82,6 +91,8 @@ function App() {
 
     setInputSubmitted(true);
 
+    beepPlay();
+
     console.log('askQuestion:', inputQuestion)
 
     const userMsg = { role: 'user', content: inputQuestion };
@@ -116,12 +127,17 @@ function App() {
     const normalized = assistantContent.toUpperCase();
     const firstWord = normalized.split(/\s+/)[0];
     setBitValue(firstWord === 'YES');
+
+    firstWord === 'YES'
+      ? yesPlay()
+      : noPlay();
+    
     setInputSubmitted(false);
 
     setTimeout(() => {
       setBitValue(undefined);
     }, 800);
-  }, [inputQuestion, messages])
+  }, [beepPlay, inputQuestion, messages, noPlay, yesPlay])
 
   const renderBit = useCallback(() => {
     if (bitValue === undefined) {
