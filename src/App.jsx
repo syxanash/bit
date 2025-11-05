@@ -14,18 +14,23 @@ import superNoSound from './assets/sounds/superNo.mp3';
 import beepSound from './assets/sounds/beep.mp3';
 
 function App() {
-  const [yesPlay] = useSound(yesSound, { preload: true });
-  const [superYesPlay] = useSound(superYesSound, { preload: true });
-  const [noPlay] = useSound(noSound, { preload: true });
-  const [superNoPlay] = useSound(superNoSound, { preload: true });
-  const [beepPlay, { stop: beepStop }] = useSound(beepSound, { preload: true, loop: true });
-
   const [modelLoaded, setModelLoaded] = useState(false);
   const [inputSubmitted, setInputSubmitted] = useState(false);
-  const [inputQuestion, setInputQuestion] = useState(undefined);
+  const [inputQuestion, setInputQuestion] = useState('');
   const [bitValue, setBitValue] = useState(undefined);
   const [percentageLoad, setPercentageLoad] = useState(undefined);
 
+  const animationEnded = useCallback(() => {
+    setBitValue(undefined);
+    setInputSubmitted(false);
+    setInputQuestion('');
+  }, []);
+
+  const [yesPlay] = useSound(yesSound, { preload: true, onend: animationEnded });
+  const [superYesPlay] = useSound(superYesSound, { preload: true, onend: animationEnded });
+  const [noPlay] = useSound(noSound, { preload: true, onend: animationEnded });
+  const [superNoPlay] = useSound(superNoSound, { preload: true, onend: animationEnded });
+  const [beepPlay, { stop: beepStop }] = useSound(beepSound, { preload: true, loop: true });
 
   const [messages, setMessages] = useState([
     { role: 'system', content: 'you are a binary answer bot. You can only respond with single word "YES" or "NO". do not provide explanation, punctuation or other text. To emphasize your answer, you can use "SUPER YES" or "SUPER NO".' },
@@ -107,18 +112,15 @@ function App() {
     setMessages((prev) => [...prev, assistantMsg]);
 
     const normalized = assistantContent.toUpperCase();
-    let superSelected = false;
 
     switch (normalized) {
       case "SUPER YES":
         setBitValue(true);
         superYesPlay();
-        superSelected = true;
         break;
       case "SUPER NO":
         setBitValue(false);
         superNoPlay();
-        superSelected = true;
         break;
       case "YES":
         setBitValue(true);
@@ -130,13 +132,7 @@ function App() {
         break;
     }
 
-    setInputSubmitted(false);
-
     beepStop();
-
-    setTimeout(() => {
-      setBitValue(undefined);
-    }, superSelected ? 1000 : 800);
   }, [inputQuestion, beepPlay, messages, beepStop, superYesPlay, superNoPlay, yesPlay, noPlay])
 
   const renderBit = useCallback(() => {
@@ -152,7 +148,7 @@ function App() {
       <div>
         {renderBit()}
       </div>
-      <input onChange={(e) => setInputQuestion(e.target.value)}></input>
+      <input value={inputQuestion} onChange={(e) => setInputQuestion(e.target.value)}></input>
       <button disabled={inputSubmitted} onClick={askQuestion}>Ask</button>
     </React.Fragment>
   }
