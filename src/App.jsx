@@ -8,12 +8,16 @@ import wllamaMulti from '@wllama/wllama/src/multi-thread/wllama.wasm?url';
 import BitAnimation from './components/BitAnimation';
 
 import yesSound from './assets/sounds/yes.mp3';
+import superYesSound from './assets/sounds/superYes.mp3';
 import noSound from './assets/sounds/no.mp3';
+import superNoSound from './assets/sounds/superNo.mp3';
 import beepSound from './assets/sounds/beep.mp3';
 
 function App() {
   const [yesPlay] = useSound(yesSound, { preload: true });
+  const [superYesPlay] = useSound(superYesSound, { preload: true });
   const [noPlay] = useSound(noSound, { preload: true });
+  const [superNoPlay] = useSound(superNoSound, { preload: true });
   const [beepPlay, { stop: beepStop }] = useSound(beepSound, { preload: true, loop: true });
 
   const [modelLoaded, setModelLoaded] = useState(false);
@@ -24,11 +28,15 @@ function App() {
 
 
   const [messages, setMessages] = useState([
-    { role: 'system', content: 'you are a binary answer bot. You can only respond with single word "YES" or "NO". do not provide explanation, punctuation or other text.' },
+    { role: 'system', content: 'you are a binary answer bot. You can only respond with single word "YES" or "NO". do not provide explanation, punctuation or other text. To emphasize your answer, you can use "SUPER YES" or "SUPER NO".' },
     { role: 'user', content: 'is the water wet?' },
     { role: 'assistant', content: 'YES' },
+    { role: 'user', content: 'are you angry at me?' },
+    { role: 'assistant', content: 'SUPER NO' },
     { role: 'user', content: 'is planet earth flat?' },
     { role: 'assistant', content: 'NO' },
+    { role: 'user', content: 'are you a bit?' },
+    { role: 'assistant', content: 'SUPER YES' },
   ]);
 
   const wllamaInstance = useRef(undefined);
@@ -99,12 +107,28 @@ function App() {
     setMessages((prev) => [...prev, assistantMsg]);
 
     const normalized = assistantContent.toUpperCase();
-    const firstWord = normalized.split(/\s+/)[0];
-    setBitValue(firstWord === 'YES');
+    let superSelected = false;
 
-    firstWord === 'YES'
-      ? yesPlay()
-      : noPlay();
+    switch (normalized) {
+      case "SUPER YES":
+        setBitValue(true);
+        superYesPlay();
+        superSelected = true;
+        break;
+      case "SUPER NO":
+        setBitValue(false);
+        superNoPlay();
+        superSelected = true;
+        break;
+      case "YES":
+        setBitValue(true);
+        yesPlay()
+        break;
+      case "NO":
+        setBitValue(false);
+        noPlay();
+        break;
+    }
 
     setInputSubmitted(false);
 
@@ -112,8 +136,8 @@ function App() {
 
     setTimeout(() => {
       setBitValue(undefined);
-    }, 800);
-  }, [beepPlay, inputQuestion, messages, noPlay, beepStop, yesPlay])
+    }, superSelected ? 1000 : 800);
+  }, [inputQuestion, beepPlay, messages, beepStop, superYesPlay, superNoPlay, yesPlay, noPlay])
 
   const renderBit = useCallback(() => {
     return (
