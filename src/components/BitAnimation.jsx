@@ -45,14 +45,17 @@ function BitAnimation({ bitValue, thinking }) {
 
   const renderIdleBit = () => {
     const src = bitIdleStatus ? bitIdle1 : bitIdle2;
-    return <img className="bit-img" src={src} alt="bit" loading="eager" />;
+    return <img className="bit-img no-drag" src={src} alt="bit" draggable={false}
+      onDragStart={(e) => e.preventDefault()} loading="eager" />;
   }
 
   const renderAliveBit = () => {
     if (bitValue === BIT_STATUSES.YES) {
-      return <img className="bit-img" src={bitYes} alt="Bit YES" loading="eager" />;
+      return <img className="bit-img no-drag" src={bitYes} alt="Bit YES" draggable={false}
+        onDragStart={(e) => e.preventDefault()} loading="eager" />;
     } else {
-      return <img className="bit-img" src={bitNo} alt="Bit NO" loading="eager" />;
+      return <img className="bit-img no-drag" src={bitNo} alt="Bit NO" draggable={false}
+        onDragStart={(e) => e.preventDefault()} loading="eager" />;
     }
   };
 

@@ -15,6 +15,21 @@
   max-width: 100%;
 }
 
+.no-drag {
+  -webkit-user-drag: none;
+
+  user-drag: none;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  touch-action: none;
+
+  pointer-events: auto;
+}
+
 @keyframes bit-pulsate {
   0% {
     transform: scale(1);
