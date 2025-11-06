@@ -33,15 +33,15 @@ function App() {
   const [beepPlay, { stop: beepStop }] = useSound(beepSound, { preload: true, loop: true });
 
   const [messages, setMessages] = useState([
-    { role: 'system', content: 'you are a binary answer bot. You can only respond with single word "YES" or "NO". do not provide explanation, punctuation or other text. To emphasize your answer, you can use "SUPER YES" or "SUPER NO".' },
+    { role: 'system', content: 'you are a binary answer bot. You can only respond with single word "YES" or "NO". do not provide explanation, punctuation or other text. To emphasize your answer, you can use "LOUD YES" or "LOUD NO".' },
     { role: 'user', content: 'is the water wet?' },
     { role: 'assistant', content: 'YES' },
     { role: 'user', content: 'are you angry at me?' },
-    { role: 'assistant', content: 'SUPER NO' },
+    { role: 'assistant', content: 'LOUD NO' },
     { role: 'user', content: 'is planet earth flat?' },
     { role: 'assistant', content: 'NO' },
     { role: 'user', content: 'are you a bit?' },
-    { role: 'assistant', content: 'SUPER YES' },
+    { role: 'assistant', content: 'LOUD YES' },
   ]);
 
   const wllamaInstance = useRef(undefined);
@@ -114,11 +114,11 @@ function App() {
     const normalized = assistantContent.toUpperCase();
 
     switch (normalized) {
-      case "SUPER YES":
+      case "LOUD YES":
         setBitValue(true);
         superYesPlay();
         break;
-      case "SUPER NO":
+      case "LOUD NO":
         setBitValue(false);
         superNoPlay();
         break;

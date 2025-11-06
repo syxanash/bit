@@ -36,7 +36,7 @@ function BitAnimation({ bitValue }) {
 
   useInterval(() => {
     setBitIdleStatus(!bitIdleStatus);
-  }, 500);
+  }, 600);
 
   if (bitValue === undefined) {
     const src = bitIdleStatus ? bitIdle1 : bitIdle2;
