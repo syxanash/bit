@@ -5,7 +5,10 @@ import { Wllama } from '@wllama/wllama';
 import wllamaSingle from '@wllama/wllama/src/single-thread/wllama.wasm?url';
 import wllamaMulti from '@wllama/wllama/src/multi-thread/wllama.wasm?url';
 
+import BIT_STATUSES from './bit';
 import BitAnimation from './components/BitAnimation';
+
+import './App.css';
 
 import yesSound from './assets/sounds/yes.mp3';
 import superYesSound from './assets/sounds/superYes.mp3';
@@ -18,11 +21,11 @@ function App() {
   const [modelLoaded, setModelLoaded] = useState(false);
   const [inputSubmitted, setInputSubmitted] = useState(false);
   const [inputQuestion, setInputQuestion] = useState('');
-  const [bitValue, setBitValue] = useState(undefined);
+  const [bitValue, setBitValue] = useState(BIT_STATUSES.IDLE);
   const [percentageLoad, setPercentageLoad] = useState(undefined);
 
   const animationEnded = useCallback(() => {
-    setBitValue(undefined);
+    setBitValue(BIT_STATUSES.IDLE);
     setInputSubmitted(false);
     setInputQuestion('');
   }, []);
@@ -117,23 +120,23 @@ LOUD YES` },
 
     switch (normalized) {
       case "LOUD YES":
-        setBitValue(true);
+        setBitValue(BIT_STATUSES.YES);
         superYesPlay();
         break;
       case "LOUD NO":
-        setBitValue(false);
+        setBitValue(BIT_STATUSES.NO);
         superNoPlay();
         break;
       case "YES":
-        setBitValue(true);
+        setBitValue(BIT_STATUSES.YES);
         yesPlay()
         break;
       case "NO":
-        setBitValue(false);
+        setBitValue(BIT_STATUSES.NO);
         noPlay();
         break;
       default:
-        setBitValue(false);
+        setBitValue(BIT_STATUSES.NO);
         errorPlay();
         break;
     }
@@ -143,17 +146,19 @@ LOUD YES` },
 
   const renderMainScreen = useCallback(() => {
     return <React.Fragment>
-      <div>
+      <div className='animation-wrapper'>
         <BitAnimation bitValue={bitValue} />
       </div>
-      <input value={inputQuestion} onChange={(e) => setInputQuestion(e.target.value)}></input>
-      <button disabled={inputSubmitted} onClick={askQuestion}>Ask</button>
+      <div className='controls'>
+        <input className='question-input' value={inputQuestion} onChange={(e) => setInputQuestion(e.target.value)}></input>
+        <button className='main-button' disabled={inputSubmitted} onClick={askQuestion}>Ask</button>
+      </div>
     </React.Fragment>
   }, [askQuestion, bitValue, inputQuestion, inputSubmitted]);
 
   const renderLoadingScreen = useCallback(() => {
     return <React.Fragment>
-      <button onClick={loadModel}>WAKE UP</button>
+      <button className='main-button' onClick={loadModel}>WAKE UP</button>
       {
         percentageLoad !== undefined
           ? <div>
@@ -164,7 +169,7 @@ LOUD YES` },
     </React.Fragment>
   }, [loadModel, percentageLoad]);
 
-  return <div>
+  return <div className='app-container'>
     {modelLoaded ? renderMainScreen() : renderLoadingScreen()}
   </div>
 }

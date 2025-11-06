@@ -1,0 +1,12 @@
+.bit-animation {
+  width: 100%;
+  max-width: 300px;
+  display: inline-block;
+}
+
+.bit-animation .bit-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
