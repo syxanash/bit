@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
+import BIT_STATUSES from '../bit';
+
+import './BitAnimation.css';
+
 import bitIdle1 from '../assets/bit_idle_1.gif';
 import bitIdle2 from '../assets/bit_idle_2.gif';
 import bitYes from '../assets/bit_yes.gif';
@@ -23,8 +27,8 @@ function useInterval(callback, delay) {
   }, [delay]);
 }
 
-function BitAnimation({ bitValue }) {
-  const [bitIdleStatus, setBitIdleStatus] = useState(true);
+function BitAnimation({ bitValue, thinking }) {
+  const [bitIdleStatus, setBitIdleStatus] = useState(bitValue);
 
   useEffect(() => {
     const images = [bitIdle1, bitIdle2, bitYes, bitNo];
@@ -35,19 +39,28 @@ function BitAnimation({ bitValue }) {
   }, []);
 
   useInterval(() => {
-    setBitIdleStatus(!bitIdleStatus);
-  }, 600);
+    // use functional update to avoid stale closure
+    setBitIdleStatus(s => !s);
+  }, thinking ? 150 : 1000);
 
-  if (bitValue === undefined) {
+  const renderIdleBit = () => {
     const src = bitIdleStatus ? bitIdle1 : bitIdle2;
-    return <img src={src} width='60%' alt='bit' loading="eager" />
+    return <img className="bit-img" src={src} alt="bit" loading="eager" />;
   }
 
-  if (bitValue) {
-    return <img src={bitYes} width='60%' alt='Bit YES' loading="eager" />
-  } else {
-    return <img src={bitNo} width='60%' alt='Bit NO' loading="eager" />
-  }
+  const renderAliveBit = () => {
+    if (bitValue === BIT_STATUSES.YES) {
+      return <img className="bit-img" src={bitYes} alt="Bit YES" loading="eager" />;
+    } else {
+      return <img className="bit-img" src={bitNo} alt="Bit NO" loading="eager" />;
+    }
+  };
+
+  return (
+    <div className="bit-animation">
+      {bitValue === BIT_STATUSES.IDLE ? renderIdleBit() : renderAliveBit()}
+    </div>
+  );
 };
 
 export default BitAnimation;

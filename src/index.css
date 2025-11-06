@@ -2,7 +2,14 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
+html,
 body {
-  display: flex;
-}
+  background-color: black;
+  color: white;
 
+  margin: 0;
+  padding: 0;
+
+  overflow: auto;
+  height: 100%
+}

@@ -5,7 +5,11 @@ import { Wllama } from '@wllama/wllama';
 import wllamaSingle from '@wllama/wllama/src/single-thread/wllama.wasm?url';
 import wllamaMulti from '@wllama/wllama/src/multi-thread/wllama.wasm?url';
 
+import BIT_STATUSES from './bit';
 import BitAnimation from './components/BitAnimation';
+
+import './App.css';
+import './assets/magic/magic.css';
 
 import yesSound from './assets/sounds/yes.mp3';
 import superYesSound from './assets/sounds/superYes.mp3';
@@ -18,11 +22,12 @@ function App() {
   const [modelLoaded, setModelLoaded] = useState(false);
   const [inputSubmitted, setInputSubmitted] = useState(false);
   const [inputQuestion, setInputQuestion] = useState('');
-  const [bitValue, setBitValue] = useState(undefined);
+  const [bitValue, setBitValue] = useState(BIT_STATUSES.IDLE);
+  const [errorDetected, setErrorDetected] = useState(false);
   const [percentageLoad, setPercentageLoad] = useState(undefined);
 
   const animationEnded = useCallback(() => {
-    setBitValue(undefined);
+    setBitValue(BIT_STATUSES.IDLE);
     setInputSubmitted(false);
     setInputQuestion('');
   }, []);
@@ -31,7 +36,15 @@ function App() {
   const [superYesPlay] = useSound(superYesSound, { preload: true, onend: animationEnded });
   const [noPlay] = useSound(noSound, { preload: true, onend: animationEnded });
   const [superNoPlay] = useSound(superNoSound, { preload: true, onend: animationEnded });
-  const [errorPlay] = useSound(errorSound, { preload: true, onend: () => { animationEnded(); window.location.reload(); } });
+  const [errorPlay] = useSound(errorSound, {
+    preload: true,
+    onend: () => {
+      setErrorDetected(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    }
+  });
   const [beepPlay, { stop: beepStop }] = useSound(beepSound, { preload: true, loop: true });
 
   const [messages, setMessages] = useState([
@@ -53,8 +66,6 @@ LOUD YES` },
   const progressCallback = useCallback(({ loaded, total }) => {
     const progressPercentage = Math.round((loaded / total) * 100);
     setPercentageLoad(progressPercentage);
-
-    console.log(`Downloading... ${progressPercentage}%`);
   }, []);
 
   const loadModel = useCallback(async () => {
@@ -119,23 +130,23 @@ LOUD YES` },
 
     switch (normalized) {
       case "LOUD YES":
-        setBitValue(true);
+        setBitValue(BIT_STATUSES.YES);
         superYesPlay();
         break;
       case "LOUD NO":
-        setBitValue(false);
+        setBitValue(BIT_STATUSES.NO);
         superNoPlay();
         break;
       case "YES":
-        setBitValue(true);
+        setBitValue(BIT_STATUSES.YES);
         yesPlay()
         break;
       case "NO":
-        setBitValue(false);
+        setBitValue(BIT_STATUSES.NO);
         noPlay();
         break;
       default:
-        setBitValue(false);
+        setBitValue(BIT_STATUSES.NO);
         errorPlay();
         break;
     }
@@ -143,34 +154,45 @@ LOUD YES` },
     beepStop();
   }, [inputQuestion, beepPlay, messages, beepStop, superYesPlay, superNoPlay, yesPlay, noPlay, errorPlay])
 
-  const renderBit = useCallback(() => {
-    return (
-      <BitAnimation
-        bitValue={bitValue}
-      />
-    );
-  }, [bitValue]);
-
-  if (modelLoaded) {
+  const renderMainScreen = useCallback(() => {
     return <React.Fragment>
-      <div>
-        {renderBit()}
+      <div className='controls' style={errorDetected ? { display: 'none' } : {}}>
+        <input
+          className='question-input'
+          value={inputQuestion}
+          onChange={(e) => setInputQuestion(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !inputSubmitted) {
+              askQuestion();
+            }
+          }}
+        ></input>
+        <button className='main-button' disabled={inputSubmitted} onClick={askQuestion}>Ask</button>
       </div>
-      <input value={inputQuestion} onChange={(e) => setInputQuestion(e.target.value)}></input>
-      <button disabled={inputSubmitted} onClick={askQuestion}>Ask</button>
-    </React.Fragment>
-  }
-
-  return <React.Fragment>
-    <button onClick={loadModel}>WAKE UP</button>
-    {
-      percentageLoad !== undefined
-        ? <div>
-          <span>Downloading... {percentageLoad}%</span>
+      <div className='animation-wrapper'>
+        <div className={`magictime ${errorDetected ? 'foolishOut' : 'foolishIn'}`}>
+          <BitAnimation bitValue={bitValue} thinking={inputSubmitted} />
         </div>
-        : null
-    }
-  </React.Fragment>
+      </div>
+    </React.Fragment>
+  }, [askQuestion, bitValue, errorDetected, inputQuestion, inputSubmitted]);
+
+  const renderLoadingScreen = useCallback(() => {
+    return <React.Fragment>
+      <button className='main-button' onClick={loadModel}>WAKE UP</button>
+      {
+        percentageLoad !== undefined
+          ? <div>
+            <span>Downloading... {percentageLoad}%</span>
+          </div>
+          : null
+      }
+    </React.Fragment>
+  }, [loadModel, percentageLoad]);
+
+  return <div className='app-container'>
+    {modelLoaded ? renderMainScreen() : renderLoadingScreen()}
+  </div>
 }
 
 export default App;
