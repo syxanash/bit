@@ -12,6 +12,7 @@ import superYesSound from './assets/sounds/superYes.mp3';
 import noSound from './assets/sounds/no.mp3';
 import superNoSound from './assets/sounds/superNo.mp3';
 import beepSound from './assets/sounds/beep.mp3';
+import errorSound from './assets/sounds/error.mp3';
 
 function App() {
   const [modelLoaded, setModelLoaded] = useState(false);
@@ -30,18 +31,21 @@ function App() {
   const [superYesPlay] = useSound(superYesSound, { preload: true, onend: animationEnded });
   const [noPlay] = useSound(noSound, { preload: true, onend: animationEnded });
   const [superNoPlay] = useSound(superNoSound, { preload: true, onend: animationEnded });
+  const [errorPlay] = useSound(errorSound, { preload: true, onend: () => { animationEnded(); window.location.reload(); } });
   const [beepPlay, { stop: beepStop }] = useSound(beepSound, { preload: true, loop: true });
 
   const [messages, setMessages] = useState([
-    { role: 'system', content: 'you are a binary answer bot. You can only respond with single word "YES" or "NO". do not provide explanation, punctuation or other text. To emphasize your answer, you can use "LOUD YES" or "LOUD NO".' },
-    { role: 'user', content: 'is the water wet?' },
-    { role: 'assistant', content: 'YES' },
-    { role: 'user', content: 'are you angry at me?' },
-    { role: 'assistant', content: 'LOUD NO' },
-    { role: 'user', content: 'is planet earth flat?' },
-    { role: 'assistant', content: 'NO' },
-    { role: 'user', content: 'are you a bit?' },
-    { role: 'assistant', content: 'LOUD YES' },
+    {
+      role: 'system', content: `You are a friendly binary answer bot. You can only respond with single word "YES" or "NO". do not provide explanation, punctuation or other text. To emphasize your answer, you can use "LOUD YES" or "LOUD NO".
+Examples:
+is the water wet?
+YES
+are you angry at me?
+LOUD NO
+is the planet earth flat?
+NO
+are you a bit?
+LOUD YES` },
   ]);
 
   const wllamaInstance = useRef(undefined);
@@ -130,10 +134,14 @@ function App() {
         setBitValue(false);
         noPlay();
         break;
+      default:
+        setBitValue(false);
+        errorPlay();
+        break;
     }
 
     beepStop();
-  }, [inputQuestion, beepPlay, messages, beepStop, superYesPlay, superNoPlay, yesPlay, noPlay])
+  }, [inputQuestion, beepPlay, messages, beepStop, superYesPlay, superNoPlay, yesPlay, noPlay, errorPlay])
 
   const renderBit = useCallback(() => {
     return (
