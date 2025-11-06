@@ -156,12 +156,12 @@ LOUD YES` },
 
   const renderMainScreen = useCallback(() => {
     return <React.Fragment>
-      <div className='controls'>
+      <div className='controls' style={errorDetected ? { display: 'none' } : {}}>
         <input className='question-input' value={inputQuestion} onChange={(e) => setInputQuestion(e.target.value)}></input>
         <button className='main-button' disabled={inputSubmitted} onClick={askQuestion}>Ask</button>
       </div>
       <div className='animation-wrapper'>
-        <div className={errorDetected ? 'magictime foolishOut' : ''}>
+        <div className={`magictime ${errorDetected ? 'foolishOut' : 'foolishIn'}`}>
           <BitAnimation bitValue={bitValue} />
         </div>
       </div>
