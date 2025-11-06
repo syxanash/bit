@@ -53,8 +53,6 @@ LOUD YES` },
   const progressCallback = useCallback(({ loaded, total }) => {
     const progressPercentage = Math.round((loaded / total) * 100);
     setPercentageLoad(progressPercentage);
-
-    console.log(`Downloading... ${progressPercentage}%`);
   }, []);
 
   const loadModel = useCallback(async () => {
@@ -143,34 +141,32 @@ LOUD YES` },
     beepStop();
   }, [inputQuestion, beepPlay, messages, beepStop, superYesPlay, superNoPlay, yesPlay, noPlay, errorPlay])
 
-  const renderBit = useCallback(() => {
-    return (
-      <BitAnimation
-        bitValue={bitValue}
-      />
-    );
-  }, [bitValue]);
-
-  if (modelLoaded) {
+  const renderMainScreen = useCallback(() => {
     return <React.Fragment>
       <div>
-        {renderBit()}
+        <BitAnimation bitValue={bitValue} />
       </div>
       <input value={inputQuestion} onChange={(e) => setInputQuestion(e.target.value)}></input>
       <button disabled={inputSubmitted} onClick={askQuestion}>Ask</button>
     </React.Fragment>
-  }
+  }, [askQuestion, bitValue, inputQuestion, inputSubmitted]);
 
-  return <React.Fragment>
-    <button onClick={loadModel}>WAKE UP</button>
-    {
-      percentageLoad !== undefined
-        ? <div>
-          <span>Downloading... {percentageLoad}%</span>
-        </div>
-        : null
-    }
-  </React.Fragment>
+  const renderLoadingScreen = useCallback(() => {
+    return <React.Fragment>
+      <button onClick={loadModel}>WAKE UP</button>
+      {
+        percentageLoad !== undefined
+          ? <div>
+            <span>Downloading... {percentageLoad}%</span>
+          </div>
+          : null
+      }
+    </React.Fragment>
+  }, [loadModel, percentageLoad]);
+
+  return <div>
+    {modelLoaded ? renderMainScreen() : renderLoadingScreen()}
+  </div>
 }
 
 export default App;
