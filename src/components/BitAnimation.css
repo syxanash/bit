@@ -2,6 +2,10 @@
   width: 100%;
   max-width: 400px;
   display: inline-block;
+
+  transform-origin: center center;
+  will-change: transform, opacity;
+  animation: bit-pulsate 3s ease-in-out infinite;
 }
 
 .bit-animation .bit-img {
@@ -9,4 +13,21 @@
   width: 100%;
   height: auto;
   max-width: 100%;
+}
+
+@keyframes bit-pulsate {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(0.7);
+    opacity: 0.92;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

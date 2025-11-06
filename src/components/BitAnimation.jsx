@@ -27,7 +27,7 @@ function useInterval(callback, delay) {
   }, [delay]);
 }
 
-function BitAnimation({ bitValue }) {
+function BitAnimation({ bitValue, thinking }) {
   const [bitIdleStatus, setBitIdleStatus] = useState(bitValue);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ function BitAnimation({ bitValue }) {
   useInterval(() => {
     // use functional update to avoid stale closure
     setBitIdleStatus(s => !s);
-  }, 600);
+  }, thinking ? 150 : 1000);
 
   const renderIdleBit = () => {
     const src = bitIdleStatus ? bitIdle1 : bitIdle2;

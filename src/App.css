@@ -53,6 +53,14 @@
   background: #15234d;
 }
 
+.main-button:disabled {
+  background: #555;
+  border-color: #333;
+  color: #ccc;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
 .question-input {
   flex: 1 1 auto;
 
