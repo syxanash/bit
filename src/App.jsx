@@ -9,6 +9,7 @@ import BIT_STATUSES from './bit';
 import BitAnimation from './components/BitAnimation';
 
 import './App.css';
+import './assets/magic/magic.css';
 
 import yesSound from './assets/sounds/yes.mp3';
 import superYesSound from './assets/sounds/superYes.mp3';
@@ -22,6 +23,7 @@ function App() {
   const [inputSubmitted, setInputSubmitted] = useState(false);
   const [inputQuestion, setInputQuestion] = useState('');
   const [bitValue, setBitValue] = useState(BIT_STATUSES.IDLE);
+  const [errorDetected, setErrorDetected] = useState(false);
   const [percentageLoad, setPercentageLoad] = useState(undefined);
 
   const animationEnded = useCallback(() => {
@@ -34,7 +36,15 @@ function App() {
   const [superYesPlay] = useSound(superYesSound, { preload: true, onend: animationEnded });
   const [noPlay] = useSound(noSound, { preload: true, onend: animationEnded });
   const [superNoPlay] = useSound(superNoSound, { preload: true, onend: animationEnded });
-  const [errorPlay] = useSound(errorSound, { preload: true, onend: () => { animationEnded(); window.location.reload(); } });
+  const [errorPlay] = useSound(errorSound, {
+    preload: true,
+    onend: () => {
+      setErrorDetected(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    }
+  });
   const [beepPlay, { stop: beepStop }] = useSound(beepSound, { preload: true, loop: true });
 
   const [messages, setMessages] = useState([
@@ -151,10 +161,12 @@ LOUD YES` },
         <button className='main-button' disabled={inputSubmitted} onClick={askQuestion}>Ask</button>
       </div>
       <div className='animation-wrapper'>
-        <BitAnimation bitValue={bitValue} />
+        <div className={errorDetected ? 'magictime foolishOut' : ''}>
+          <BitAnimation bitValue={bitValue} />
+        </div>
       </div>
     </React.Fragment>
-  }, [askQuestion, bitValue, inputQuestion, inputSubmitted]);
+  }, [askQuestion, bitValue, errorDetected, inputQuestion, inputSubmitted]);
 
   const renderLoadingScreen = useCallback(() => {
     return <React.Fragment>
