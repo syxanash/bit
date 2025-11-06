@@ -1,3 +1,15 @@
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-button {
+  min-width: 150px;
+}
+
 .animation-wrapper {
   display: flex;
   justify-content: center;

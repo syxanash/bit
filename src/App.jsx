@@ -179,14 +179,16 @@ LOUD YES` },
 
   const renderLoadingScreen = useCallback(() => {
     return <React.Fragment>
-      <button className='main-button' onClick={loadModel}>WAKE UP</button>
-      {
-        percentageLoad !== undefined
-          ? <div>
-            <span>Downloading... {percentageLoad}%</span>
-          </div>
-          : null
-      }
+      <div className='loading-screen'>
+        <button className='main-button loading-button' onClick={loadModel}>WAKE IT UP</button>
+        {
+          percentageLoad !== undefined
+            ? <div>
+              <span>Downloading... {percentageLoad}%</span>
+            </div>
+            : null
+        }
+      </div>
     </React.Fragment>
   }, [loadModel, percentageLoad]);
 
