@@ -26,6 +26,12 @@ function App() {
   const [errorDetected, setErrorDetected] = useState(false);
   const [percentageLoad, setPercentageLoad] = useState(undefined);
 
+  const inputRef = useRef(null);
+
+  const handleBitClick = useCallback(() => {
+    inputRef.current?.focus();
+  }, []);
+
   const animationEnded = useCallback(() => {
     setBitValue(BIT_STATUSES.IDLE);
     setInputSubmitted(false);
@@ -158,6 +164,7 @@ LOUD YES` },
     return <React.Fragment>
       <div className='controls' style={errorDetected ? { display: 'none' } : {}}>
         <input
+          ref={inputRef}
           className='question-input'
           value={inputQuestion}
           onChange={(e) => setInputQuestion(e.target.value)}
@@ -169,13 +176,13 @@ LOUD YES` },
         ></input>
         <button className='main-button' disabled={inputSubmitted} onClick={askQuestion}>Ask</button>
       </div>
-      <div className='animation-wrapper'>
+      <div className='animation-wrapper' onClick={handleBitClick}>
         <div className={`magictime ${errorDetected ? 'foolishOut' : 'foolishIn'}`}>
           <BitAnimation bitValue={bitValue} thinking={inputSubmitted} />
         </div>
       </div>
     </React.Fragment>
-  }, [askQuestion, bitValue, errorDetected, inputQuestion, inputSubmitted]);
+  }, [askQuestion, bitValue, errorDetected, handleBitClick, inputQuestion, inputSubmitted]);
 
   const renderLoadingScreen = useCallback(() => {
     return <React.Fragment>
