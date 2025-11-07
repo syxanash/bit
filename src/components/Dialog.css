@@ -1,0 +1,83 @@
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  animation: fadeIn 0.1s ease-in-out;
+  font-family: monaco, Consolas, Lucida Console, monospace;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.dialog-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: black;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.dialog-close-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  border: 2px solid #ffd220;
+  color: #ffd220;
+  font-size: 28px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 0 0px 0px #ffd220, 0 0 9px 2px #ffd220;
+  transition: all 0.2s ease-in-out;
+  padding: 0;
+}
+
+.dialog-close-button:hover {
+  background-color: #395fcf;
+  color: black;
+}
+
+.dialog-close-button:active {
+  transform: scale(0.95);
+  background-color: #15234d;
+}
+
+.dialog-content {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  padding: 60px 20px 20px 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}

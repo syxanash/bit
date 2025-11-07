@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 
 import mainDisc from '../assets/disc/cutout-disc.png';
+import ring0 from '../assets/disc/ring-0.png';
 import ring1 from '../assets/disc/ring-1.png';
 import ring2 from '../assets/disc/ring-2.png';
 import ring3 from '../assets/disc/ring-3.png';
@@ -34,6 +35,13 @@ function LoadingScreen({ percentage }) {
       onMouseUp={() => setIsClicked(false)}
       onMouseLeave={() => setIsClicked(false)}
     >
+      <img
+        key={`ring-0`}
+        src={ring0}
+        alt="Loading Ring"
+        className='ring'
+        style={{ display: percentage > 0 ? 'block' : 'none' }}
+      />
       {renderInnerRings()}
       <img src={mainDisc} alt="Main Disc" className='mainDisc' />
     </div>

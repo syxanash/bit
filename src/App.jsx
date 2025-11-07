@@ -8,6 +8,7 @@ import wllamaMulti from '@wllama/wllama/src/multi-thread/wllama.wasm?url';
 import BIT_STATUSES from './bit';
 import BitAnimation from './components/BitAnimation';
 import LoadingScreen from './components/LoadingScreen';
+import Dialog from './components/Dialog';
 
 import './App.css';
 import './assets/magic/magic.css';
@@ -18,6 +19,7 @@ import noSound from './assets/sounds/no.mp3';
 import superNoSound from './assets/sounds/superNo.mp3';
 import beepSound from './assets/sounds/beep.mp3';
 import errorSound from './assets/sounds/error.mp3';
+
 import arrowIcon from './assets/arrow-turn-down-left.svg';
 
 function App() {
@@ -27,6 +29,7 @@ function App() {
   const [bitValue, setBitValue] = useState(BIT_STATUSES.IDLE);
   const [errorDetected, setErrorDetected] = useState(false);
   const [percentageLoad, setPercentageLoad] = useState(0);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const inputRef = useRef(null);
 
@@ -196,12 +199,23 @@ LOUD YES` },
         <div className='loading-button' onClick={loadModel}>
           <LoadingScreen percentage={percentageLoad} />
         </div>
+        <button className='dialog-trigger-button' onClick={() => setIsDialogOpen(true)}>
+          ?
+        </button>
       </div>
     </React.Fragment>
-  }, [loadModel, percentageLoad]);
+  }, [loadModel, percentageLoad, setIsDialogOpen]);
 
   return <div className='app-container'>
     {modelLoaded ? renderMainScreen() : renderLoadingScreen()}
+    <Dialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+      <h1>What is this?</h1>
+      <p>
+        This is a web demo based on the character <a href='https://tron.fandom.com/wiki/Bit'>Bit</a> from the movie Tron.<br />
+        The interaction is fully local thanks to a WebAssembly binding for llama.cpp called <a href='https://github.com/ngxson/wllama'>Wllama</a>. It runs a <a href='https://huggingface.co/LiquidAI/LFM2-350M-GGUF/tree/main'>very small LLM</a> that only weights 229 MB.
+        You can glance at the beauty of those sharp polygons, use bit as a rubber ducky but please don't use it as a therapist.
+      </p>
+    </Dialog>
   </div>
 }
 

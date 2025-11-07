@@ -1,3 +1,7 @@
+a {
+  color: #ffd220;
+}
+
 .loading-screen {
   position: fixed;
   inset: 0;
@@ -67,6 +71,8 @@
   box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
   background: #15234d;
 
+  transform: scale(0.95);
+
   box-shadow: 0 0 0px 0px #ffd220, 0 0 9px 2px #ffd220;
 }
 
@@ -107,4 +113,34 @@
 
   padding: 10px 10px;
   box-shadow: 0 0 0px 0px #54d8ef, 0 0 9px 2px #54d8ef;
+}
+
+.dialog-trigger-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: black;
+  color: white;
+  border: 2px solid #54d8ef;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0px 0px #54d8ef, 0 0 9px 2px #54d8ef;
+  transition: all 0.2s ease-in-out;
+  font-family: monaco, Consolas, Lucida Console, monospace;
+  padding: 0;
+}
+
+.dialog-trigger-button:hover {
+  background-color: #395fcf;
+}
+
+.dialog-trigger-button:active {
+  transform: scale(0.95);
+  background-color: #15234d;
 }
