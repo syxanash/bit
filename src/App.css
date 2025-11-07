@@ -33,13 +33,18 @@
 }
 
 .main-button {
-  font-family: "VT323", monospace;
+  font-family: monaco, Consolas, Lucida Console, monospace;
+
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   border-radius: 0px 20px 20px 0px;
 
   flex: 0 0 auto;
 
-  font-size: 2em;
+  font-size: 1.5em;
   padding: 10px 10px;
   background: black;
   color: #FFF;
@@ -73,8 +78,16 @@
   cursor: not-allowed;
 }
 
+.main-button img {
+  height: 1.3em;
+}
+
+.main-button:disabled img {
+  opacity: 0.5;
+}
+
 .question-input {
-  font-family: "VT323", monospace;
+  font-family: monaco, Consolas, Lucida Console, monospace;
 
   border-radius: 20px 0px 0px 20px;
 
@@ -83,7 +96,7 @@
   min-width: 0;
 
   color: #ffd220;
-  font-size: 2em;
+  font-size: 1.5em;
 
   border: 2px solid #54d8ef;
   background-color: black;

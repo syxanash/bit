@@ -18,6 +18,7 @@ import noSound from './assets/sounds/no.mp3';
 import superNoSound from './assets/sounds/superNo.mp3';
 import beepSound from './assets/sounds/beep.mp3';
 import errorSound from './assets/sounds/error.mp3';
+import arrowIcon from './assets/arrow-turn-down-left.svg';
 
 function App() {
   const [modelLoaded, setModelLoaded] = useState(false);
@@ -177,7 +178,9 @@ LOUD YES` },
             }
           }}
         ></input>
-        <button className='main-button' disabled={inputSubmitted} onClick={askQuestion}>Ask</button>
+        <button className='main-button' disabled={inputSubmitted} onClick={askQuestion}>
+          <img src={arrowIcon} alt="Submit" />
+        </button>
       </div>
       <div className='animation-wrapper' onClick={handleBitClick}>
         <div className={`magictime ${errorDetected ? 'foolishOut' : 'foolishIn'}`}>
