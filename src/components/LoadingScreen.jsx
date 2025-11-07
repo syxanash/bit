@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import mainDisc from '../assets/disc/cutout-disc.png';
 import ring1 from '../assets/disc/ring-1.png';
@@ -10,14 +10,6 @@ import ring5 from '../assets/disc/ring-5.png';
 import './LoadingScreen.css';
 
 function LoadingScreen({ percentage }) {
-  useEffect(() => {
-    const images = [ring1, ring2, ring3, ring4, ring5];
-    images.forEach(src => {
-      const img = new Image();
-      img.src = src;
-    });
-  }, []);
-
   const [isClicked, setIsClicked] = useState(false);
 
   const renderInnerRings = useCallback(() => {
