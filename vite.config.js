@@ -10,7 +10,39 @@ export default defineConfig({
     react(),
     mkcert(),
     // netlify(),
-    VitePWA({ registerType: 'autoUpdate' }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'Bit',
+        short_name: 'Bit',
+        description: 'Bit',
+        theme_color: '#000000',
+        background_color: '#000000',
+        display: 'standalone',
+        icons: [
+          {
+            src: '/favicon/web-app-manifest-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any maskable'
+          },
+          {
+            src: '/favicon/web-app-manifest-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable'
+          },
+          {
+            src: '/favicon/apple-touch-icon.png',
+            sizes: '180x180',
+            type: 'image/png'
+          }
+        ]
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,wasm,mp3,gif}']
+      }
+    }),
     {
       name: 'isolation',
       configureServer(server) {
