@@ -22,7 +22,7 @@ import errorSound from './assets/sounds/error.mp3';
 function App() {
   const [modelLoaded, setModelLoaded] = useState(false);
   const [inputSubmitted, setInputSubmitted] = useState(false);
-  const [inputQuestion, setInputQuestion] = useState('');
+  const [inputQuestion, setInputQuestion] = useState(undefined);
   const [bitValue, setBitValue] = useState(BIT_STATUSES.IDLE);
   const [errorDetected, setErrorDetected] = useState(false);
   const [percentageLoad, setPercentageLoad] = useState(0);
@@ -102,7 +102,7 @@ LOUD YES` },
 
     beepPlay();
 
-    console.log('askQuestion:', inputQuestion)
+    console.log('question:', inputQuestion)
 
     const userMsg = { role: 'user', content: inputQuestion };
     const messagesForRequest = [...messages, userMsg];
@@ -126,7 +126,7 @@ LOUD YES` },
 
     const response = await wllamaInstance.current.createChatCompletion(messagesForRequest, options);
 
-    console.log('assistant response raw:', response);
+    console.log('response:', response);
 
     const assistantContent = (response || '').trim();
 
@@ -167,9 +167,9 @@ LOUD YES` },
         <input
           ref={inputRef}
           name='question'
-          placeholder='hello?'
+          placeholder={inputQuestion === undefined ? 'hello?' : ''}
           className='question-input'
-          value={inputQuestion}
+          value={inputQuestion || ''}
           onChange={(e) => setInputQuestion(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !inputSubmitted) {
