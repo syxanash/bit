@@ -7,6 +7,7 @@ import wllamaMulti from '@wllama/wllama/src/multi-thread/wllama.wasm?url';
 
 import BIT_STATUSES from './bit';
 import BitAnimation from './components/BitAnimation';
+import LoadingScreen from './components/LoadingScreen';
 
 import './App.css';
 import './assets/magic/magic.css';
@@ -24,7 +25,7 @@ function App() {
   const [inputQuestion, setInputQuestion] = useState('');
   const [bitValue, setBitValue] = useState(BIT_STATUSES.IDLE);
   const [errorDetected, setErrorDetected] = useState(false);
-  const [percentageLoad, setPercentageLoad] = useState(undefined);
+  const [percentageLoad, setPercentageLoad] = useState(0);
 
   const inputRef = useRef(null);
 
@@ -187,14 +188,9 @@ LOUD YES` },
   const renderLoadingScreen = useCallback(() => {
     return <React.Fragment>
       <div className='loading-screen'>
-        <button className='main-button loading-button' onClick={loadModel}>WAKE IT UP</button>
-        {
-          percentageLoad !== undefined
-            ? <div>
-              <span>Downloading... {percentageLoad}%</span>
-            </div>
-            : null
-        }
+        <div className='loading-button' onClick={loadModel}>
+          <LoadingScreen percentage={percentageLoad} />
+        </div>
       </div>
     </React.Fragment>
   }, [loadModel, percentageLoad]);
