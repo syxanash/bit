@@ -166,6 +166,8 @@ LOUD YES` },
       <div className='controls' style={errorDetected ? { display: 'none' } : {}}>
         <input
           ref={inputRef}
+          name='question'
+          placeholder='hello?'
           className='question-input'
           value={inputQuestion}
           onChange={(e) => setInputQuestion(e.target.value)}
