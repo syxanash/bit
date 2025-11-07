@@ -34,7 +34,8 @@
 
 .main-button {
   font-family: monaco, Consolas, Lucida Console, monospace;
-
+  box-sizing: border-box;
+  height: 53px;
   width: 60px;
   display: flex;
   align-items: center;
@@ -80,6 +81,7 @@
 
 .main-button img {
   height: 1.3em;
+  margin-left: -3px;
 }
 
 .main-button:disabled img {
@@ -88,6 +90,8 @@
 
 .question-input {
   font-family: monaco, Consolas, Lucida Console, monospace;
+  box-sizing: border-box;
+  height: 53px;
 
   border-radius: 20px 0px 0px 20px;
 
