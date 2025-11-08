@@ -40,7 +40,6 @@ a {
   font-family: monaco, Consolas, Lucida Console, monospace;
   box-sizing: border-box;
   height: 53px;
-  width: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,4 +142,44 @@ a {
 .dialog-trigger-button:active {
   transform: scale(0.95);
   background-color: #15234d;
+}
+
+.dialog-button {
+  font-family: monaco, Consolas, Lucida Console, monospace;
+  box-sizing: border-box;
+  height: 53px;
+
+  border-radius: 20px 20px 20px 20px;
+
+  flex: 1 1 auto;
+
+  min-width: 0;
+
+  color: white;
+
+  font-size: 1em;
+
+  border: 2px solid #ffd220;
+  background-color: black;
+
+  padding: 10px 10px;
+  box-shadow: 0 0 0px 0px #ffd220, 0 0 9px 2px #ffd220;
+}
+
+.dialog-button:hover {
+  background-color: #395fcf;
+}
+
+.dialog-button:active {
+  transform: scale(0.95);
+  background-color: #15234d;
+}
+
+.dialog-button:disabled {
+  background: black;
+  border-color: #333;
+  color: #ccc;
+
+  box-shadow: none;
+  cursor: not-allowed;
 }

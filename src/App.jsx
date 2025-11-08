@@ -1,7 +1,7 @@
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
 import useSound from 'use-sound';
-import { Wllama } from '@wllama/wllama';
+import { Wllama, ModelManager } from '@wllama/wllama';
 import wllamaSingle from '@wllama/wllama/src/single-thread/wllama.wasm?url';
 import wllamaMulti from '@wllama/wllama/src/multi-thread/wllama.wasm?url';
 
@@ -30,7 +30,10 @@ function App() {
   const [errorDetected, setErrorDetected] = useState(false);
   const [percentageLoad, setPercentageLoad] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [inferenceEnabled, setInferenceEnabled] = useState(true);
+  const [cacheCleared, setCacheCleared] = useState(false);
 
+  const modelManager = useRef(new ModelManager());
   const inputRef = useRef(null);
 
   const handleBitClick = useCallback(() => {
@@ -80,6 +83,11 @@ LOUD YES` },
   }, []);
 
   const loadModel = useCallback(async () => {
+    if (!inferenceEnabled) {
+      setModelLoaded(true);
+      return;
+    }
+
     const WLLAMA_CONFIG_PATHS = {
       'single-thread/wllama.wasm': wllamaSingle,
       'multi-thread/wllama.wasm': wllamaMulti,
@@ -97,7 +105,7 @@ LOUD YES` },
     )
 
     setModelLoaded(true);
-  }, [progressCallback]);
+  }, [inferenceEnabled, progressCallback]);
 
   const askQuestion = useCallback(async () => {
     if (!inputQuestion || !inputQuestion.trim()) return;
@@ -106,40 +114,53 @@ LOUD YES` },
 
     beepPlay();
 
-    console.log('question:', inputQuestion)
+    let reply = '';
 
-    const userMsg = { role: 'user', content: inputQuestion };
-    const messagesForRequest = [...messages, userMsg];
-    setMessages(messagesForRequest);
+    if (inferenceEnabled) {
+      console.log('question:', inputQuestion)
 
-    const config = {
-      seed: 42,
-      temp: 0.0,
-      top_p: 0.95,
-      top_k: 40,
-    };
+      const userMsg = { role: 'user', content: inputQuestion };
+      const messagesForRequest = [...messages, userMsg];
+      setMessages(messagesForRequest);
 
-    await wllamaInstance.current.samplingInit(config);
+      const config = {
+        seed: 42,
+        temp: 0.0,
+        top_p: 0.95,
+        top_k: 40,
+      };
 
-    const options = {
-      nPredict: 10,
-      sampling: config,
-      useCache: true,
-      stream: false,
+      await wllamaInstance.current.samplingInit(config);
+
+      const options = {
+        nPredict: 10,
+        sampling: config,
+        useCache: true,
+        stream: false,
+      }
+
+      const response = await wllamaInstance.current.createChatCompletion(messagesForRequest, options);
+
+      console.log('response:', response);
+
+      const assistantContent = (response || '').trim();
+
+      const assistantMsg = { role: 'assistant', content: assistantContent };
+      setMessages((prev) => [...prev, assistantMsg]);
+
+      reply = assistantContent.toUpperCase();
+    } else {
+      const answers = ['YES', 'NO', 'LOUD YES', 'LOUD NO'];
+
+      // fake a delay to simulate thinking
+      reply = await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(answers[Math.floor(Math.random() * answers.length)]);
+        }, 2000);
+      });
     }
 
-    const response = await wllamaInstance.current.createChatCompletion(messagesForRequest, options);
-
-    console.log('response:', response);
-
-    const assistantContent = (response || '').trim();
-
-    const assistantMsg = { role: 'assistant', content: assistantContent };
-    setMessages((prev) => [...prev, assistantMsg]);
-
-    const normalized = assistantContent.toUpperCase();
-
-    switch (normalized) {
+    switch (reply) {
       case "LOUD YES":
         setBitValue(BIT_STATUSES.YES);
         superYesPlay();
@@ -163,7 +184,7 @@ LOUD YES` },
     }
 
     beepStop();
-  }, [inputQuestion, beepPlay, messages, beepStop, superYesPlay, superNoPlay, yesPlay, noPlay, errorPlay])
+  }, [inputQuestion, beepPlay, inferenceEnabled, beepStop, messages, superYesPlay, superNoPlay, yesPlay, noPlay, errorPlay])
 
   const renderMainScreen = useCallback(() => {
     return <React.Fragment>
@@ -206,15 +227,34 @@ LOUD YES` },
     </React.Fragment>
   }, [loadModel, percentageLoad, setIsDialogOpen]);
 
+  const randomButtonDescription = useMemo(() => {
+    return inferenceEnabled
+      ? `LLM won't be downloaded, Bit will randomly answer yes or no`
+      : `Bit will answer using LLM inference`
+  }, [inferenceEnabled]);
+
+  const cacheButtonDescription = useMemo(() => {
+    return cacheCleared
+      ? `Cache cleared!`
+      : `Delete the cached model`;
+  }, [cacheCleared]);
+
   return <div className='app-container'>
     {modelLoaded ? renderMainScreen() : renderLoadingScreen()}
     <Dialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
       <h1>What is this?</h1>
       <p>
         This is a web demo based on the character <a href='https://tron.fandom.com/wiki/Bit'>Bit</a> from the movie Tron.<br />
-        The interaction is fully local thanks to a WebAssembly binding for llama.cpp called <a href='https://github.com/ngxson/wllama'>Wllama</a>. It runs a <a href='https://huggingface.co/LiquidAI/LFM2-350M-GGUF/tree/main'>very small LLM</a> that only weights 229 MB.
-        You can glance at the beauty of those sharp polygons, use bit as a rubber ducky but please don't use it as a therapist.
+        The interaction is fully local thanks to a WebAssembly binding for llama.cpp called <a href='https://github.com/ngxson/wllama'>Wllama</a>. It runs a <a href='https://huggingface.co/LiquidAI/LFM2-350M-GGUF/tree/main'>very small LLM</a> that only weighs 229 MB!<br />
+
+        The experience may vary from device to device, as the "AI" literally runs in your browser. As a result, more capable chips (such as Apple silicon) will make the inference run faster. You can glance at the beauty of those sharp polygons and use it as a rubber ducky, but please don't use it as a therapist.<br /><br />
+        This website is not affiliated with Disney in any way. Please don't sue me I just love Tron.
       </p>
+      <h2>Settings</h2>
+      <div>
+        <button className='dialog-button' disabled={cacheCleared} onClick={() => { modelManager.current.clear(); setCacheCleared(true); } }>Clear cache</button> ({cacheButtonDescription})<br />
+        <button className='dialog-button' onClick={() => setInferenceEnabled(!inferenceEnabled)}>{inferenceEnabled ? 'Disable' : 'Enable'} LLM</button> ({randomButtonDescription})
+      </div>
     </Dialog>
   </div>
 }
