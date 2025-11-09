@@ -254,10 +254,8 @@ LOUD YES` },
     <Dialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
       <h1>What is this?</h1>
       <p>
-        This is a web demo based on the character <a href='https://tron.fandom.com/wiki/Bit'>Bit</a> from the movie Tron.<br />
-        The interaction is fully local thanks to a WebAssembly binding for llama.cpp called <a href='https://github.com/ngxson/wllama'>Wllama</a>. It runs a <a href='https://huggingface.co/LiquidAI/LFM2-350M-GGUF/tree/main'>very small LLM</a> that only weighs 229 MB!<br />
-
-        The experience may vary from device to device, as the "AI" literally runs in your browser. As a result, more capable chips (such as Apple silicon) will make the inference run faster.<br />
+        This web demo is inspired by <a href='https://tron.fandom.com/wiki/Bit'>Bit</a>, the iconic character from <i>Tron</i>.<br />
+        It runs entirely in your browser using <a href='https://github.com/ngxson/wllama'>Wllama</a>, a WebAssembly binding for llama.cpp. The <a href='https://huggingface.co/LiquidAI/LFM2-350M-GGUF/tree/main'>model</a> is lightweight at only 229 MB and operates fully locally on your device. Performance may vary depending on your hardware, faster chips such as Apple Silicon will allow smoother inference.<br />
         You can glance at the beauty of those sharp polygons and perhaps use Bit as a rubber ducky, but please don't use it as a therapist...<br /><br />
         Source code available <a href='https://github.com/syxanash/bit'>here</a>.<br /><br />
         This website is not affiliated with Disney in any way, please don't sue me I just love Tron.
