@@ -247,12 +247,15 @@ LOUD YES` },
         This is a web demo based on the character <a href='https://tron.fandom.com/wiki/Bit'>Bit</a> from the movie Tron.<br />
         The interaction is fully local thanks to a WebAssembly binding for llama.cpp called <a href='https://github.com/ngxson/wllama'>Wllama</a>. It runs a <a href='https://huggingface.co/LiquidAI/LFM2-350M-GGUF/tree/main'>very small LLM</a> that only weighs 229 MB!<br />
 
-        The experience may vary from device to device, as the "AI" literally runs in your browser. As a result, more capable chips (such as Apple silicon) will make the inference run faster. You can glance at the beauty of those sharp polygons and use it as a rubber ducky, but please don't use it as a therapist.<br /><br />
-        This website is not affiliated with Disney in any way. Please don't sue me I just love Tron.
+        The experience may vary from device to device, as the "AI" literally runs in your browser. As a result, more capable chips (such as Apple silicon) will make the inference run faster.<br />
+        You can glance at the beauty of those sharp polygons and perhaps use Bit as a rubber ducky, but please don't use it as a therapist...<br /><br />
+        Source code available <a href='https://github.com/syxanash/bit'>here</a>.<br /><br />
+        This website is not affiliated with Disney in any way, please don't sue me I just love Tron.
       </p>
       <h2>Settings</h2>
       <div>
         <button className='dialog-button' disabled={cacheCleared} onClick={() => { modelManager.current.clear(); setCacheCleared(true); } }>Clear cache</button> ({cacheButtonDescription})<br />
+        <br />
         <button className='dialog-button' onClick={() => setInferenceEnabled(!inferenceEnabled)}>{inferenceEnabled ? 'Disable' : 'Enable'} LLM</button> ({randomButtonDescription})
       </div>
     </Dialog>

@@ -147,7 +147,6 @@ a {
 .dialog-button {
   font-family: monaco, Consolas, Lucida Console, monospace;
   box-sizing: border-box;
-  height: 53px;
 
   border-radius: 20px 20px 20px 20px;
 
@@ -162,7 +161,7 @@ a {
   border: 2px solid #ffd220;
   background-color: black;
 
-  padding: 10px 10px;
+  padding: 10px;
   box-shadow: 0 0 0px 0px #ffd220, 0 0 9px 2px #ffd220;
 }
 
