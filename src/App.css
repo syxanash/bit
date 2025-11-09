@@ -37,7 +37,6 @@ a {
 }
 
 .main-button {
-  font-family: monaco, Consolas, Lucida Console, monospace;
   box-sizing: border-box;
   height: 53px;
   display: flex;
@@ -131,7 +130,6 @@ a {
   justify-content: center;
   box-shadow: 0 0 0px 0px #54d8ef, 0 0 9px 2px #54d8ef;
   transition: all 0.2s ease-in-out;
-  font-family: monaco, Consolas, Lucida Console, monospace;
   padding: 0;
 }
 
