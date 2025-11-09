@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import useSound from 'use-sound';
 import { Wllama, ModelManager } from '@wllama/wllama';
 import wllamaSingle from '@wllama/wllama/src/single-thread/wllama.wasm?url';
@@ -32,9 +32,19 @@ function App() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [inferenceEnabled, setInferenceEnabled] = useState(true);
   const [cacheCleared, setCacheCleared] = useState(false);
+  const [modelsLoaded, setModelsLoaded] = useState([]);
 
   const modelManager = useRef(new ModelManager());
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    async function fetchModels() {
+      const models = await modelManager.current.getModels();
+      setModelsLoaded(models);
+    }
+
+    fetchModels();
+  }, []);
 
   const handleBitClick = useCallback(() => {
     inputRef.current?.focus();
@@ -254,7 +264,7 @@ LOUD YES` },
       </p>
       <h2>Settings</h2>
       <div>
-        <button className='dialog-button' disabled={cacheCleared} onClick={() => { modelManager.current.clear(); setCacheCleared(true); } }>Clear cache</button> ({cacheButtonDescription})<br />
+        <button className='dialog-button' disabled={cacheCleared || modelsLoaded.length === 0} onClick={() => { modelManager.current.clear(); setCacheCleared(true); }}>Clear cache</button> ({cacheButtonDescription})<br />
         <br />
         <button className='dialog-button' onClick={() => setInferenceEnabled(!inferenceEnabled)}>{inferenceEnabled ? 'Disable' : 'Enable'} LLM</button> ({randomButtonDescription})
       </div>

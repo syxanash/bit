@@ -27,25 +27,30 @@ function LoadingScreen({ percentage }) {
     ));
   }, [percentage]);
 
-  return (<div className={`container ${isClicked ? 'clicked' : ''}`}>
-    <div
-      className='imageWrapper float-animation'
-      onMouseDown={() => setIsClicked(true)}
-      onClick={() => setIsClicked(true)}
-      onMouseUp={() => setIsClicked(false)}
-      onMouseLeave={() => setIsClicked(false)}
-    >
-      <img
-        key={`ring-0`}
-        src={ring0}
-        alt="Loading Ring"
-        className='ring'
-        style={{ display: percentage > 0 ? 'block' : 'none' }}
-      />
-      {renderInnerRings()}
-      <img src={mainDisc} alt="Main Disc" className='mainDisc' />
+  return (<React.Fragment>
+    <div className='loading-text' style={{ display: percentage > 0 ? 'block' : 'none' }}>
+      <span>Loading... {percentage}%</span>
     </div>
-  </div>);
+    <div className={`container ${isClicked ? 'clicked' : ''}`}>
+      <div
+        className='imageWrapper float-animation'
+        onMouseDown={() => setIsClicked(true)}
+        onClick={() => setIsClicked(true)}
+        onMouseUp={() => setIsClicked(false)}
+        onMouseLeave={() => setIsClicked(false)}
+      >
+        <img
+          key={`ring-0`}
+          src={ring0}
+          alt="Loading Ring"
+          className='ring'
+          style={{ display: percentage > 0 ? 'block' : 'none' }}
+        />
+        {renderInnerRings()}
+        <img src={mainDisc} alt="Main Disc" className='mainDisc' />
+      </div>
+    </div>
+  </React.Fragment>);
 }
 
 export default LoadingScreen;
