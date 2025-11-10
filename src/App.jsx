@@ -89,10 +89,15 @@ LOUD YES` },
 
   const progressCallback = useCallback(({ loaded, total }) => {
     const progressPercentage = Math.round((loaded / total) * 100);
+
+    if (progressPercentage === 0) return;
+
     setPercentageLoad(progressPercentage);
   }, []);
 
   const loadModel = useCallback(async () => {
+    setPercentageLoad(1);
+
     if (!inferenceEnabled) {
       setModelLoaded(true);
       return;
