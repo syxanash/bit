@@ -12,7 +12,6 @@
   "dependencies": {
     "@netlify/vite-plugin": "^2.7.9",
     "@wllama/wllama": "^2.3.6",
-    "ollama": "^0.6.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "use-sound": "^5.0.0"
