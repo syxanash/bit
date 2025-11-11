@@ -7,6 +7,7 @@ import ring2 from '../assets/disc/ring-2.png';
 import ring3 from '../assets/disc/ring-3.png';
 import ring4 from '../assets/disc/ring-4.png';
 import ring5 from '../assets/disc/ring-5.png';
+import applelogo from '../assets/apple-logo.png';
 
 import './LoadingScreen.css';
 
@@ -30,6 +31,9 @@ function LoadingScreen({ percentage }) {
   return (<React.Fragment>
     <div className='loading-text' style={{ display: percentage > 0 ? 'block' : 'none' }}>
       <span>Loading... {percentage}%</span>
+    </div>
+    <div className='best-viewed'>
+      <span>Best viewed on <img src={applelogo} alt='Apple'></img>Silicon</span>
     </div>
     <div className={`container ${isClicked ? 'clicked' : ''}`}>
       <div

@@ -15,6 +15,20 @@
   color: white;
 }
 
+.best-viewed {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 1rem;
+  color: white;
+}
+
+.best-viewed img {
+  width: 16px;
+  height: 16px;
+  margin: 0 5px;
+}
+
 .imageWrapper {
   position: relative;
   display: flex;
