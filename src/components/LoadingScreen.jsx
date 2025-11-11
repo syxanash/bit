@@ -33,7 +33,7 @@ function LoadingScreen({ percentage }) {
       <span>Loading... {percentage}%</span>
     </div>
     <div className='best-viewed'>
-      <span>Best viewed on <img src={applelogo} alt='Apple'></img>Silicon</span>
+      <span>Best viewed on <img src={applelogo} alt='Apple'></img>Silicon (for now)</span>
     </div>
     <div className={`container ${isClicked ? 'clicked' : ''}`}>
       <div
