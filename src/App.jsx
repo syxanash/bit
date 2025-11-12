@@ -22,6 +22,8 @@ import errorSound from './assets/sounds/error.mp3';
 
 import arrowIcon from './assets/arrow-turn-down-left.svg';
 
+const MODEL_URL = 'https://huggingface.co/LiquidAI/LFM2-350M-GGUF/resolve/main/LFM2-350M-Q4_K_M.gguf';
+
 function App() {
   const [modelLoaded, setModelLoaded] = useState(false);
   const [inputSubmitted, setInputSubmitted] = useState(false);
@@ -110,7 +112,7 @@ LOUD YES` },
 
     wllamaInstance.current = new Wllama(WLLAMA_CONFIG_PATHS, { allowOffline: false });
     await wllamaInstance.current.loadModelFromUrl(
-      'https://huggingface.co/LiquidAI/LFM2-350M-GGUF/resolve/main/LFM2-350M-Q4_K_M.gguf',
+      MODEL_URL,
       {
         progressCallback,
         n_ctx: 4096,

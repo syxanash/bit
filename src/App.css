@@ -25,7 +25,6 @@ a {
 }
 
 .app-container {
-  min-height: 100vh;
   padding: 12px;
   box-sizing: border-box;
 }
