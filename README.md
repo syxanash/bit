@@ -1,6 +1,6 @@
 # Bit
 
-![bit](https://github.com/user-attachments/assets/c3003fbe-0e31-404e-8409-bd7811f86a8a)
+<img src='https://github.com/user-attachments/assets/c3003fbe-0e31-404e-8409-bd7811f86a8a' height='250px' alt='bit'/><br />
 
 Introducing [Bit](https://tron.fandom.com/wiki/Bit), just like in the movies but it runs entirely in your browser. It can only say _YES_ and _NO_ unless prompt injected in that case it'll simply run away...
 
