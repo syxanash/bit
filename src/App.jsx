@@ -252,17 +252,13 @@ function App() {
     </React.Fragment>
   }, [loadModel, percentageLoad, setIsDialogOpen]);
 
-  const randomButtonDescription = useMemo(() => {
-    return inferenceEnabled
-      ? `LLM won't be downloaded, Bit will randomly answer yes or no`
-      : `Bit will answer using LLM inference`
-  }, [inferenceEnabled]);
+  const randomButtonDescription = inferenceEnabled
+    ? `LLM won't be downloaded, Bit will randomly answer yes or no`
+    : `Bit will answer using LLM inference`;
 
-  const cacheButtonDescription = useMemo(() => {
-    return cacheCleared
-      ? `Cache cleared!`
-      : `Delete the cached model`;
-  }, [cacheCleared]);
+  const cacheButtonDescription = cacheCleared
+    ? `Cache cleared!`
+    : `Delete the cached model`;
 
   return <div className="app-root">
     <div className="image-container" style={{ display: showBackground ? 'block' : 'none' }}>
