@@ -22,7 +22,7 @@ import errorSound from './assets/sounds/error.mp3';
 
 import arrowIcon from './assets/arrow-turn-down-left.svg';
 
-const backgrounds = import.meta.glob('./assets/backgrounds/*.png', { eager: true, import: 'default' });
+const backgrounds = import.meta.glob('./assets/backgrounds/*.jpg', { eager: true, import: 'default' });
 const randomBG = Object.values(backgrounds)[Math.floor(Math.random() * Object.values(backgrounds).length)];
 
 function App() {
@@ -245,12 +245,9 @@ function App() {
         <div className='loading-button' onClick={loadModel}>
           <LoadingScreen percentage={percentageLoad} />
         </div>
-        <button className='dialog-trigger-button' onClick={() => setIsDialogOpen(true)}>
-          ?
-        </button>
       </div>
     </React.Fragment>
-  }, [loadModel, percentageLoad, setIsDialogOpen]);
+  }, [loadModel, percentageLoad]);
 
   const randomButtonDescription = inferenceEnabled
     ? `LLM won't be downloaded, Bit will randomly answer yes or no`
@@ -266,6 +263,9 @@ function App() {
     </div>
     <div className='app-container'>
       {modelLoaded ? renderMainScreen() : renderLoadingScreen()}
+      <button className='dialog-trigger-button' onClick={() => setIsDialogOpen(true)}>
+        ?
+      </button>
       <Dialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
         <h1>What is this?</h1>
         <p>

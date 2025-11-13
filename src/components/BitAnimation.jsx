@@ -31,6 +31,22 @@ function BitAnimation({ bitValue, thinking }) {
   const [bitIdleStatus, setBitIdleStatus] = useState(bitValue);
 
   useEffect(() => {
+    let thinkingTimer;
+
+    if (thinking) {
+      thinkingTimer = setTimeout(() => {
+        alert("if Bit takes too long to answer try disabling the LLM!");
+      }, 5000);
+    }
+
+    return () => {
+      if (thinkingTimer) {
+        clearTimeout(thinkingTimer);
+      }
+    };
+  }, [thinking]);
+
+  useEffect(() => {
     const images = [bitIdle1, bitIdle2, bitYes, bitNo];
     images.forEach(src => {
       const img = new Image();
