@@ -38,7 +38,7 @@ function BitAnimation({ bitValue, thinking }) {
       thinkingTimer = setTimeout(() => {
         alert("if Bit takes too long to answer try disabling the LLM!");
         setDisplayedAlert(true);
-      }, 5000);
+      }, 8000);
     }
 
     return () => {
