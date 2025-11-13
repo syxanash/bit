@@ -1,5 +1,5 @@
 a {
-  color: #ffd220;
+  color: #54d8ef;
 }
 
 .loading-screen {
@@ -121,13 +121,13 @@ a {
   border-radius: 50%;
   background-color: black;
   color: white;
-  border: 2px solid #54d8ef;
+  border: 2px solid #ffd220;
   font-size: 24px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 0px 0px #54d8ef, 0 0 9px 2px #54d8ef;
+  box-shadow: 0 0 0px 0px #ffd220, 0 0 9px 2px #ffd220;
   transition: all 0.2s ease-in-out;
   padding: 0;
 }
