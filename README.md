@@ -26,7 +26,7 @@ npm run dev
 
 The app can be freely self hosted anywhere you want as long as you can set up the COOP and COEP HTTP headers. These are required for running WebAssembly in multithreading mode, otherwise the inference will be much slower. See [Wllama's README](https://github.com/ngxson/wllama?tab=readme-ov-file#features)
 
-You can experiment with other models as long as they're in gguf format. Just modify the constant `MODEL_URL` in `App.jsx`.
+You can experiment with other models as long as they're in gguf format. Just modify the constant `MODEL_URL` in `bit.js`.
 
 ## External Resources
 

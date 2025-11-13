@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import BIT_STATUSES from '../bit';
+import BIT from '../bit';
 
 import './BitAnimation.css';
 
@@ -50,7 +50,7 @@ function BitAnimation({ bitValue, thinking }) {
   }
 
   const renderAliveBit = () => {
-    if (bitValue === BIT_STATUSES.YES) {
+    if (bitValue === BIT.STATUSES.YES) {
       return <img className="bit-img no-drag" src={bitYes} alt="Bit YES" draggable={false}
         onDragStart={(e) => e.preventDefault()} loading="eager" />;
     } else {
@@ -61,7 +61,7 @@ function BitAnimation({ bitValue, thinking }) {
 
   return (
     <div className="bit-animation">
-      {bitValue === BIT_STATUSES.IDLE ? renderIdleBit() : renderAliveBit()}
+      {bitValue === BIT.STATUSES.IDLE ? renderIdleBit() : renderAliveBit()}
     </div>
   );
 };

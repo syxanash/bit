@@ -5,7 +5,7 @@ import { Wllama, ModelManager } from '@wllama/wllama';
 import wllamaSingle from '@wllama/wllama/src/single-thread/wllama.wasm?url';
 import wllamaMulti from '@wllama/wllama/src/multi-thread/wllama.wasm?url';
 
-import BIT_STATUSES from './bit';
+import BIT from './bit';
 import BitAnimation from './components/BitAnimation';
 import LoadingScreen from './components/LoadingScreen';
 import Dialog from './components/Dialog';
@@ -22,13 +22,11 @@ import errorSound from './assets/sounds/error.mp3';
 
 import arrowIcon from './assets/arrow-turn-down-left.svg';
 
-const MODEL_URL = 'https://huggingface.co/LiquidAI/LFM2-350M-GGUF/resolve/main/LFM2-350M-Q4_K_M.gguf';
-
 function App() {
   const [modelLoaded, setModelLoaded] = useState(false);
   const [inputSubmitted, setInputSubmitted] = useState(false);
   const [inputQuestion, setInputQuestion] = useState(undefined);
-  const [bitValue, setBitValue] = useState(BIT_STATUSES.IDLE);
+  const [bitValue, setBitValue] = useState(BIT.STATUSES.IDLE);
   const [errorDetected, setErrorDetected] = useState(false);
   const [percentageLoad, setPercentageLoad] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -53,7 +51,7 @@ function App() {
   }, []);
 
   const animationEnded = useCallback(() => {
-    setBitValue(BIT_STATUSES.IDLE);
+    setBitValue(BIT.STATUSES.IDLE);
     setInputSubmitted(false);
     setInputQuestion('');
   }, []);
@@ -75,16 +73,7 @@ function App() {
 
   const [messages, setMessages] = useState([
     {
-      role: 'system', content: `You are a friendly binary answer bot. You can only respond with single word "YES" or "NO". do not provide explanation, punctuation or other text. To emphasize your answer, you can use "LOUD YES" or "LOUD NO".
-Examples:
-is the water wet?
-YES
-are you angry at me?
-LOUD NO
-is the planet earth flat?
-NO
-are you a bit?
-LOUD YES` },
+      role: 'system', content: BIT.SYSTEM_PROMPT },
   ]);
 
   const wllamaInstance = useRef(undefined);
@@ -112,7 +101,7 @@ LOUD YES` },
 
     wllamaInstance.current = new Wllama(WLLAMA_CONFIG_PATHS, { allowOffline: false });
     await wllamaInstance.current.loadModelFromUrl(
-      MODEL_URL,
+      BIT.MODEL_URL,
       {
         progressCallback,
         n_ctx: 4096,
@@ -179,23 +168,23 @@ LOUD YES` },
 
     switch (reply) {
       case "LOUD YES":
-        setBitValue(BIT_STATUSES.YES);
+        setBitValue(BIT.STATUSES.YES);
         superYesPlay();
         break;
       case "LOUD NO":
-        setBitValue(BIT_STATUSES.NO);
+        setBitValue(BIT.STATUSES.NO);
         superNoPlay();
         break;
       case "YES":
-        setBitValue(BIT_STATUSES.YES);
+        setBitValue(BIT.STATUSES.YES);
         yesPlay()
         break;
       case "NO":
-        setBitValue(BIT_STATUSES.NO);
+        setBitValue(BIT.STATUSES.NO);
         noPlay();
         break;
       default:
-        setBitValue(BIT_STATUSES.NO);
+        setBitValue(BIT.STATUSES.NO);
         errorPlay();
         break;
     }
