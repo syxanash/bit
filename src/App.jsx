@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import useSound from 'use-sound';
 import { Wllama, ModelManager } from '@wllama/wllama';
 import wllamaSingle from '@wllama/wllama/src/single-thread/wllama.wasm?url';
@@ -33,6 +33,7 @@ function App() {
   const [errorDetected, setErrorDetected] = useState(false);
   const [percentageLoad, setPercentageLoad] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [bgImageLoaded, setBgImageLoaded] = useState(false);
   const [inferenceEnabled, setInferenceEnabled] = useState(() => {
     const saved = localStorage.getItem('inferenceEnabled');
     return saved !== null ? JSON.parse(saved) : true;
@@ -259,7 +260,15 @@ function App() {
 
   return <div className="app-root">
     <div className="image-container" style={{ display: showBackground ? 'block' : 'none' }}>
-      {modelLoaded ? <img className='actual-image' src={randomBG} alt='background' /> : null}
+      {modelLoaded && (
+        <img
+          className="actual-image"
+          src={randomBG}
+          alt="background"
+          style={{ display: bgImageLoaded ? 'block' : 'none' }}
+          onLoad={() => setBgImageLoaded(true)}
+        />
+      )}
     </div>
     <div className='app-container'>
       {modelLoaded ? renderMainScreen() : renderLoadingScreen()}
