@@ -29,13 +29,15 @@ function useInterval(callback, delay) {
 
 function BitAnimation({ bitValue, thinking }) {
   const [bitIdleStatus, setBitIdleStatus] = useState(bitValue);
+  const [displayedAlert, setDisplayedAlert] = useState(false);
 
   useEffect(() => {
     let thinkingTimer;
 
-    if (thinking) {
+    if (thinking && !displayedAlert) {
       thinkingTimer = setTimeout(() => {
         alert("if Bit takes too long to answer try disabling the LLM!");
+        setDisplayedAlert(true);
       }, 5000);
     }
 
@@ -44,7 +46,7 @@ function BitAnimation({ bitValue, thinking }) {
         clearTimeout(thinkingTimer);
       }
     };
-  }, [thinking]);
+  }, [displayedAlert, thinking]);
 
   useEffect(() => {
     const images = [bitIdle1, bitIdle2, bitYes, bitNo];
