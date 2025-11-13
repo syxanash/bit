@@ -4,7 +4,7 @@
   display: inline-block;
 
   transform-origin: center center;
-  will-change: transform, opacity;
+  will-change: transform;
   animation: bit-pulsate 3s ease-in-out infinite;
 }
 
@@ -33,16 +33,13 @@
 @keyframes bit-pulsate {
   0% {
     transform: scale(1);
-    opacity: 1;
   }
 
   50% {
     transform: scale(0.7);
-    opacity: 0.92;
   }
 
   100% {
     transform: scale(1);
-    opacity: 1;
   }
 }
