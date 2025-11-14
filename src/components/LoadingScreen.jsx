@@ -11,7 +11,7 @@ import applelogo from '../assets/apple-logo.png';
 
 import './LoadingScreen.css';
 
-function LoadingScreen({ percentage }) {
+function LoadingScreen({ percentage, onDiscLoad }) {
   const [isClicked, setIsClicked] = useState(false);
 
   const renderInnerRings = useCallback(() => {
@@ -51,7 +51,7 @@ function LoadingScreen({ percentage }) {
           style={{ display: percentage > 0 ? 'block' : 'none' }}
         />
         {renderInnerRings()}
-        <img src={mainDisc} alt="Main Disc" className='mainDisc' />
+        <img src={mainDisc} alt="Main Disc" className='mainDisc' onLoad={onDiscLoad} />
       </div>
     </div>
   </React.Fragment>);

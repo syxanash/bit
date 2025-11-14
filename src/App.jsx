@@ -244,7 +244,10 @@ function App() {
     return <React.Fragment>
       <div className='loading-screen'>
         <div className='loading-button' onClick={loadModel}>
-          <LoadingScreen percentage={percentageLoad} />
+          <LoadingScreen percentage={percentageLoad} onDiscLoad={() => {
+            const img = new Image();
+            img.src = randomBG;
+          }} />
         </div>
       </div>
     </React.Fragment>
