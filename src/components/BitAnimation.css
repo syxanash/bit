@@ -5,7 +5,14 @@
 
   transform-origin: center center;
   will-change: transform;
+}
+
+.bit-animation.pulsate {
   animation: bit-pulsate 3s ease-in-out infinite;
+}
+
+.bit-animation.enlarge {
+  animation: bit-enlarge 0.5s ease-in-out infinite;
 }
 
 .bit-animation .bit-img {
@@ -28,6 +35,20 @@
   touch-action: none;
 
   pointer-events: auto;
+}
+
+@keyframes bit-enlarge {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes bit-pulsate {

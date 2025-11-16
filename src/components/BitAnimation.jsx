@@ -78,7 +78,7 @@ function BitAnimation({ bitValue, thinking }) {
   };
 
   return (
-    <div className="bit-animation">
+    <div className={`bit-animation ${bitValue === BIT.STATUSES.IDLE ? 'pulsate' : 'enlarge'}`}>
       {bitValue === BIT.STATUSES.IDLE ? renderIdleBit() : renderAliveBit()}
     </div>
   );
