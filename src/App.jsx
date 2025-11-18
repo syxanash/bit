@@ -289,7 +289,7 @@ function App() {
         </p>
         <h2>Settings</h2>
         <div>
-          <button className='dialog-button' disabled={cacheCleared || modelsLoaded.length === 0} onClick={() => { modelManager.current.clear(); setCacheCleared(true); }}>Clear cache</button> ({cacheButtonDescription})
+          <button className='dialog-button important' disabled={cacheCleared || modelsLoaded.length === 0} onClick={() => { modelManager.current.clear(); setCacheCleared(true); }}>Clear cache</button> ({cacheButtonDescription})
           <br />
           <br />
           <button className='dialog-button' onClick={() => setInferenceEnabled(!inferenceEnabled)}>{inferenceEnabled ? 'Disable' : 'Enable'} LLM</button> ({randomButtonDescription})
