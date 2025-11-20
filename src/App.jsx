@@ -23,7 +23,12 @@ import errorSound from './assets/sounds/error.mp3';
 import arrowIcon from './assets/arrow-turn-down-left.svg';
 
 const backgrounds = import.meta.glob('./assets/backgrounds/*.jpg', { eager: true, import: 'default' });
-const randomBG = Object.values(backgrounds)[Math.floor(Math.random() * Object.values(backgrounds).length)];
+
+function pickRandomBackground(currentBg) {
+  const bgArray = Object.values(backgrounds).filter(bg => bg !== currentBg);
+  const randomIndex = Math.floor(Math.random() * bgArray.length);
+  return bgArray[randomIndex];
+}
 
 function App() {
   const [modelLoaded, setModelLoaded] = useState(false);
@@ -34,6 +39,7 @@ function App() {
   const [percentageLoad, setPercentageLoad] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [bgImageLoaded, setBgImageLoaded] = useState(false);
+  const [randomBG, setRandomBG] = useState(pickRandomBackground());
   const [inferenceEnabled, setInferenceEnabled] = useState(() => {
     const saved = localStorage.getItem('inferenceEnabled');
     return saved !== null ? JSON.parse(saved) : true;
@@ -64,6 +70,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem('inferenceEnabled', JSON.stringify(inferenceEnabled));
   }, [inferenceEnabled]);
+
+  const changeBackground = useCallback(() => {
+    setRandomBG(prev => pickRandomBackground(prev));
+  }, []);
 
   const handleBitClick = useCallback(() => {
     inputRef.current?.focus();
@@ -251,7 +261,7 @@ function App() {
         </div>
       </div>
     </React.Fragment>
-  }, [loadModel, percentageLoad]);
+  }, [loadModel, percentageLoad, randomBG]);
 
   const randomButtonDescription = inferenceEnabled
     ? `LLM won't be downloaded, Bit will randomly answer yes or no`
@@ -294,8 +304,9 @@ function App() {
           <br />
           <button className='dialog-button' onClick={() => setInferenceEnabled(!inferenceEnabled)}>{inferenceEnabled ? 'Disable' : 'Enable'} LLM</button> ({randomButtonDescription})
           <br />
-          <br />
+          <h3>Background</h3>
           <button className='dialog-button' onClick={() => setShowBackground(!showBackground)}>{showBackground ? 'Hide' : 'Show'} Background</button>
+          <button disabled={!showBackground} className='dialog-button' onClick={changeBackground}>Change Background</button>
         </div>
       </Dialog>
     </div></div>;
