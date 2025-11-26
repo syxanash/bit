@@ -10,8 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@huggingface/transformers": "^3.8.0",
     "@netlify/vite-plugin": "^2.7.9",
-    "@wllama/wllama": "^2.3.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "use-sound": "^5.0.0"

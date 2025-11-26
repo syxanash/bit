@@ -1,9 +1,8 @@
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import useSound from 'use-sound';
-import { Wllama, ModelManager } from '@wllama/wllama';
-import wllamaSingle from '@wllama/wllama/src/single-thread/wllama.wasm?url';
-import wllamaMulti from '@wllama/wllama/src/multi-thread/wllama.wasm?url';
+
+import { pipeline, TextStreamer } from "@huggingface/transformers";
 
 import BIT from './bit';
 import BitAnimation from './components/BitAnimation';
@@ -49,19 +48,9 @@ function App() {
     const saved = localStorage.getItem('showBackground');
     return saved !== null ? JSON.parse(saved) : true;
   });
-  const [modelsLoaded, setModelsLoaded] = useState([]);
 
-  const modelManager = useRef(new ModelManager());
   const inputRef = useRef(null);
-
-  useEffect(() => {
-    async function fetchModels() {
-      const models = await modelManager.current.getModels();
-      setModelsLoaded(models);
-    }
-
-    fetchModels();
-  }, []);
+  const generatorRef = useRef(null);
 
   useEffect(() => {
     localStorage.setItem('showBackground', JSON.stringify(showBackground));
@@ -106,16 +95,6 @@ function App() {
     },
   ]);
 
-  const wllamaInstance = useRef(undefined);
-
-  const progressCallback = useCallback(({ loaded, total }) => {
-    const progressPercentage = Math.round((loaded / total) * 100);
-
-    if (progressPercentage === 0) return;
-
-    setPercentageLoad(progressPercentage);
-  }, []);
-
   const loadModel = useCallback(async () => {
     setPercentageLoad(1);
 
@@ -124,30 +103,26 @@ function App() {
       return;
     }
 
-    const WLLAMA_CONFIG_PATHS = {
-      'single-thread/wllama.wasm': wllamaSingle,
-      'multi-thread/wllama.wasm': wllamaMulti,
-    };
-
-    wllamaInstance.current = new Wllama(WLLAMA_CONFIG_PATHS, { allowOffline: false });
-    await wllamaInstance.current.loadModelFromUrl(
-      BIT.MODEL_URL,
+    generatorRef.current = await pipeline(
+      "text-generation",
+      "onnx-community/LFM2-350M-ONNX",
       {
-        progressCallback,
-        n_ctx: 4096,
-        n_batch: 512,
-        n_threads: Math.max(1, navigator.hardwareConcurrency || 1),
+        dtype: "q4",
+        progress_callback: (prog) => {
+          if (prog.status === 'progress') {
+            setPercentageLoad(prog.progress);
+          }
+        },
       }
-    )
+    );
 
     setModelLoaded(true);
-  }, [inferenceEnabled, progressCallback]);
+  }, [inferenceEnabled]);
 
   const askQuestion = useCallback(async () => {
     if (!inputQuestion || !inputQuestion.trim()) return;
 
     setInputSubmitted(true);
-
     beepPlay();
 
     let reply = '';
@@ -159,27 +134,21 @@ function App() {
       const messagesForRequest = [...messages, userMsg];
       setMessages(messagesForRequest);
 
-      const config = {
-        seed: 42,
-        temp: 0.0,
-        top_p: 0.95,
-        top_k: 40,
-      };
+      const grammar = 'root ::= " "? ("YES" | "NO" | "LOUD YES" | "LOUD NO")';
 
-      await wllamaInstance.current.samplingInit(config);
+      const output = await generatorRef.current(messagesForRequest, {
+        max_new_tokens: 5,
+        do_sample: false,
+        grammar: grammar,
+        streamer: new TextStreamer(generatorRef.current.tokenizer, { skip_prompt: true, skip_special_tokens: true }),
+      });
 
-      const options = {
-        nPredict: 10,
-        sampling: config,
-        useCache: true,
-        stream: false,
-      }
+      const response = output[0].generated_text.at(-1).content;
 
-      const response = await wllamaInstance.current.createChatCompletion(messagesForRequest, options);
+      console.log('raw response:', response);
 
-      console.log('response:', response);
-
-      const assistantContent = (response || '').trim();
+      const cleanResponse = response.split('\n').find(line => line.trim().length > 0) || "";
+      const assistantContent = cleanResponse.trim();
 
       const assistantMsg = { role: 'assistant', content: assistantContent };
       setMessages((prev) => [...prev, assistantMsg]);
@@ -214,6 +183,8 @@ function App() {
         noPlay();
         break;
       default:
+        // Even with grammar, it's good to keep a fallback just in case
+        console.warn('Unexpected reply:', reply);
         setBitValue(BIT.STATUSES.NO);
         errorPlay();
         break;
@@ -221,7 +192,6 @@ function App() {
 
     beepStop();
   }, [inputQuestion, beepPlay, inferenceEnabled, beepStop, messages, superYesPlay, superNoPlay, yesPlay, noPlay, errorPlay])
-
   const renderMainScreen = useCallback(() => {
     return <React.Fragment>
       <div className='controls' style={errorDetected ? { display: 'none' } : {}}>
@@ -299,7 +269,7 @@ function App() {
         </p>
         <h2>Settings</h2>
         <div>
-          <button className='dialog-button important' disabled={cacheCleared || modelsLoaded.length === 0} onClick={() => { modelManager.current.clear(); setCacheCleared(true); }}>Clear cache</button> ({cacheButtonDescription})
+          <button className='dialog-button important' disabled={cacheCleared} onClick={() => { console.log('DOESNT WORK'); setCacheCleared(true); }}>Clear cache</button> ({cacheButtonDescription})
           <br />
           <br />
           <button className='dialog-button' onClick={() => setInferenceEnabled(!inferenceEnabled)}>{inferenceEnabled ? 'Disable' : 'Enable'} LLM</button> ({randomButtonDescription})
