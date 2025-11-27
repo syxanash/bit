@@ -39,6 +39,7 @@ function App() {
   const [percentageLoad, setPercentageLoad] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [bgImageLoaded, setBgImageLoaded] = useState(false);
+  const [elapsedtime, setElapsedtime] = useState(null);
   const [randomBG, setRandomBG] = useState(pickRandomBackground());
   const [inferenceEnabled, setInferenceEnabled] = useState(() => {
     const saved = localStorage.getItem('inferenceEnabled');
@@ -158,6 +159,9 @@ function App() {
       const userMsg = { role: 'user', content: inputQuestion };
       const messagesForRequest = [...messages, userMsg];
       setMessages(messagesForRequest);
+      setElapsedtime(0);
+
+      const startTime = performance.now();
 
       const config = {
         seed: 42,
@@ -176,6 +180,9 @@ function App() {
       }
 
       const response = await wllamaInstance.current.createChatCompletion(messagesForRequest, options);
+
+      const endTime = performance.now();
+      setElapsedtime(((endTime - startTime) / 1000).toFixed(2));
 
       console.log('response:', response);
 
@@ -264,8 +271,8 @@ function App() {
   }, [loadModel, percentageLoad, randomBG]);
 
   const randomButtonDescription = inferenceEnabled
-    ? `LLM won't be downloaded, Bit will randomly answer yes or no`
-    : `Bit will answer using LLM inference`;
+  ? `Bit will answer using LLM inference`
+  : `LLM won't be downloaded, Bit will randomly answer yes or no`;
 
   const cacheButtonDescription = cacheCleared
     ? `Cache cleared!`
@@ -288,6 +295,9 @@ function App() {
       <button className='dialog-trigger-button' onClick={() => setIsDialogOpen(true)}>
         ?
       </button>
+      <div className='elapsed-time' style={{ display: modelLoaded && elapsedtime !== null ? 'block' : 'none' }} aria-live='polite'>
+        <span>Response time: {elapsedtime}s</span>
+      </div>
       <Dialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
         <h1>What is this?</h1>
         <p>
@@ -303,6 +313,8 @@ function App() {
           <br />
           <br />
           <button className='dialog-button' onClick={() => setInferenceEnabled(!inferenceEnabled)}>{inferenceEnabled ? 'Disable' : 'Enable'} LLM</button> ({randomButtonDescription})
+          <br /><br />
+          <button disabled={ !inferenceEnabled } className='dialog-button' onClick={() => elapsedtime === null ? setElapsedtime(0) : setElapsedtime(null)}>{elapsedtime === null ? 'Show' : 'Hide'} Elapsed time</button>
           <br />
           <h3>Background</h3>
           <button className='dialog-button' onClick={() => setShowBackground(!showBackground)}>{showBackground ? 'Hide' : 'Show'} Background</button>

@@ -17,7 +17,7 @@ a {
   left: 0;
   z-index: -1;
   overflow: hidden;
-  background-color: black; 
+  background-color: black;
 }
 
 .actual-image {
@@ -54,7 +54,6 @@ a {
   box-sizing: border-box;
   position: relative;
   z-index: 1;
-  /* Layer 1 (Top of .app-root) */
 }
 
 .controls {
@@ -138,6 +137,19 @@ a {
 
   padding: 10px 10px;
   box-shadow: 0 0 0px 0px #54d8ef, 0 0 9px 2px #54d8ef;
+}
+
+.elapsed-time {
+  position: fixed;
+  bottom: 15px;
+  left: 15px;
+  color: #fff;
+  font-family: monaco, Consolas, Lucida Console, monospace;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1em;
+  margin-right: 100px;
 }
 
 .dialog-trigger-button {
