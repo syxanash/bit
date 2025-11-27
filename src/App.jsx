@@ -109,8 +109,9 @@ function App() {
       {
         dtype: "q4",
         progress_callback: (prog) => {
-          if (prog.status === 'progress') {
-            setPercentageLoad(prog.progress);
+          console.log(prog);
+          if (prog.status === 'progress' && prog.file === 'onnx/model_q4.onnx_data') {
+            setPercentageLoad(Math.floor(prog.progress));
           }
         },
       }
@@ -269,7 +270,7 @@ function App() {
         </p>
         <h2>Settings</h2>
         <div>
-          <button className='dialog-button important' disabled={cacheCleared} onClick={() => { console.log('DOESNT WORK'); setCacheCleared(true); }}>Clear cache</button> ({cacheButtonDescription})
+          <button className='dialog-button important' disabled={cacheCleared} onClick={async () => { await caches.delete('transformers-cache'); setCacheCleared(true); }}>Clear cache</button> ({cacheButtonDescription})
           <br />
           <br />
           <button className='dialog-button' onClick={() => setInferenceEnabled(!inferenceEnabled)}>{inferenceEnabled ? 'Disable' : 'Enable'} LLM</button> ({randomButtonDescription})
