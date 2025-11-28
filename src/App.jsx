@@ -320,7 +320,7 @@ function App() {
           <br />
           <button className='dialog-button' onClick={() => setInferenceEnabled(!inferenceEnabled)}>{inferenceEnabled ? 'Disable' : 'Enable'} LLM</button> ({randomButtonDescription})
           <br /><br />
-          <button disabled={!inferenceEnabled} className='dialog-button' onClick={() => elapsedtime === null ? setElapsedtime(undefined) : setElapsedtime(null)}>{elapsedtime === null ? 'Show' : 'Hide'} Elapsed time</button>
+          <button disabled={!inferenceEnabled} className='dialog-button' onClick={() => elapsedtime === null ? setElapsedtime(undefined) : setElapsedtime(null)}>{elapsedtime === null ? 'Show' : 'Hide'} Response time</button>
           <br />
           <h3>Background</h3>
           <button className='dialog-button' onClick={() => setShowBackground(!showBackground)}>{showBackground ? 'Hide' : 'Show'} Background</button>
