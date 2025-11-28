@@ -233,7 +233,7 @@ function App() {
     }
 
     beepStop();
-  }, [inputQuestion, beepPlay, inferenceEnabled, beepStop, messages, superYesPlay, superNoPlay, yesPlay, noPlay, errorPlay])
+  }, [inputQuestion, beepPlay, inferenceEnabled, beepStop, messages, elapsedtime, superYesPlay, superNoPlay, yesPlay, noPlay, errorPlay])
 
   const renderMainScreen = useCallback(() => {
     return <React.Fragment>
@@ -301,7 +301,7 @@ function App() {
       <button className='dialog-trigger-button' onClick={() => setIsDialogOpen(true)}>
         ?
       </button>
-      <div className='elapsed-time' style={{ display: modelLoaded && elapsedtime !== null ? 'block' : 'none' }} aria-live='polite'>
+      <div className='elapsed-time' style={{ display: inferenceEnabled && modelLoaded && elapsedtime !== null ? 'block' : 'none' }} aria-live='polite'>
         <span>Response time: {elapsedtime === undefined ? '_' : `${elapsedtime}s`}</span>
       </div>
       <Dialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
