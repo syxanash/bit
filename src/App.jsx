@@ -39,7 +39,10 @@ function App() {
   const [percentageLoad, setPercentageLoad] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [bgImageLoaded, setBgImageLoaded] = useState(false);
-  const [elapsedtime, setElapsedtime] = useState(null);
+  const [elapsedtime, setElapsedtime] = useState(() => {
+    const saved = localStorage.getItem('elapsedtime');
+    return saved !== null ? JSON.parse(saved) : null;
+  });
   const [randomBG, setRandomBG] = useState(pickRandomBackground());
   const [inferenceEnabled, setInferenceEnabled] = useState(() => {
     const saved = localStorage.getItem('inferenceEnabled');
@@ -67,6 +70,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem('showBackground', JSON.stringify(showBackground));
   }, [showBackground]);
+
+  useEffect(() => {
+    localStorage.setItem('elapsedtime', JSON.stringify(elapsedtime));
+  }, [elapsedtime]);
 
   useEffect(() => {
     localStorage.setItem('inferenceEnabled', JSON.stringify(inferenceEnabled));
@@ -163,7 +170,7 @@ function App() {
       let startTime = undefined;
 
       if (elapsedtime !== null) {
-        setElapsedtime(undefined);
+        setElapsedtime(0);
         startTime = performance.now();
       }
 
@@ -320,7 +327,7 @@ function App() {
           <br />
           <button className='dialog-button' onClick={() => setInferenceEnabled(!inferenceEnabled)}>{inferenceEnabled ? 'Disable' : 'Enable'} LLM</button> ({randomButtonDescription})
           <br /><br />
-          <button disabled={!inferenceEnabled} className='dialog-button' onClick={() => elapsedtime === null ? setElapsedtime(undefined) : setElapsedtime(null)}>{elapsedtime === null ? 'Show' : 'Hide'} Response time</button>
+          <button disabled={!inferenceEnabled} className='dialog-button' onClick={() => elapsedtime === null ? setElapsedtime(0) : setElapsedtime(null)}>{elapsedtime === null ? 'Show' : 'Hide'} Response time</button>
           <br />
           <h3>Background</h3>
           <button className='dialog-button' onClick={() => setShowBackground(!showBackground)}>{showBackground ? 'Hide' : 'Show'} Background</button>
