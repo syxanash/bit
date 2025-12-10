@@ -36,7 +36,7 @@ function BitAnimation({ bitValue, thinking }) {
 
     if (thinking && !displayedAlert) {
       thinkingTimer = setTimeout(() => {
-        alert("if Bit takes too long to answer try disabling the LLM!");
+        alert("If Bit takes too long to reply, your CPU is most likely too slow for AI inference!");
         setDisplayedAlert(true);
       }, 8000);
     }
