@@ -41,7 +41,7 @@ function App() {
   const [bgImageLoaded, setBgImageLoaded] = useState(false);
   const [elapsedtime, setElapsedtime] = useState(() => {
     const saved = localStorage.getItem('elapsedtime');
-    return saved === null ? 0 : null;
+    return saved !== null ? JSON.parse(saved) : 0;
   });
   const [randomBG, setRandomBG] = useState(pickRandomBackground());
   const [inferenceEnabled, setInferenceEnabled] = useState(() => {
