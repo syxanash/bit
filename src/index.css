@@ -1,5 +1,12 @@
+@font-face {
+  font-family: 'Unifont';
+  src: url('assets/fonts/unifont.woff') format('woff'), url('assets/fonts/unifont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Unifont', monaco, Consolas, Lucida Console, monospace;
 }
 
 html,

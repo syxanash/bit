@@ -7,7 +7,6 @@
   height: 100dvh;
   background-color: rgba(0, 0, 0, 0.8);
   animation: fadeIn 0.1s ease-in-out;
-  font-family: monaco, Consolas, Lucida Console, monospace;
   overflow: hidden;
   z-index: 999;
   cursor: pointer;
@@ -93,4 +92,5 @@
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   touch-action: pan-y;
+  font-size: 1.2em;
 }

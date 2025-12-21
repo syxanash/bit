@@ -119,7 +119,7 @@ a {
 }
 
 .question-input {
-  font-family: monaco, Consolas, Lucida Console, monospace;
+  font-family: 'Unifont', monaco, Consolas, Lucida Console, monospace;
   box-sizing: border-box;
   height: 53px;
 
@@ -130,7 +130,7 @@ a {
   min-width: 0;
 
   color: #ffd220;
-  font-size: 1.5em;
+  font-size: 1.8em;
 
   border: 2px solid #54d8ef;
   background-color: black;
@@ -144,11 +144,11 @@ a {
   bottom: 15px;
   left: 15px;
   color: #fff;
-  font-family: monaco, Consolas, Lucida Console, monospace;
+  font-family: 'Unifont', monaco, Consolas, Lucida Console, monospace;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 5px 10px;
   border-radius: 5px;
-  font-size: 1em;
+  font-size: 1.2em;
   margin-right: 100px;
 }
 
@@ -182,7 +182,7 @@ a {
 }
 
 .dialog-button {
-  font-family: monaco, Consolas, Lucida Console, monospace;
+  font-family: 'Unifont', monaco, Consolas, Lucida Console, monospace;
   box-sizing: border-box;
 
   border-radius: 20px 20px 20px 20px;
