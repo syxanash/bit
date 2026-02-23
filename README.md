@@ -1,10 +1,8 @@
-# Bit
+# Bit [![blog](https://raw.githubusercontent.com/syxanash/awesome-web-desktops/refs/heads/main/assets/notebook.png)](https://blog.simone.computer/bit-that-weighs-200mb)
 
 <img src='https://github.com/user-attachments/assets/c3003fbe-0e31-404e-8409-bd7811f86a8a' height='250px' alt='bit'/><br />
 
 Introducing [Bit](https://tron.fandom.com/wiki/Bit), just like in the movies but it runs entirely in your browser. It can only say _YES_ and _NO_ unless prompt injected in that case it'll simply run away...
-
-![blog](https://raw.githubusercontent.com/syxanash/awesome-web-desktops/refs/heads/main/assets/notebook.png)[ Blog Post](https://blog.simone.computer/bit-that-weighs-200mb)
 
 ## Requirements
 
